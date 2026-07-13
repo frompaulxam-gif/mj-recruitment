@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The plan — MJ Recruitment online</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f5b800'/%3E%3Cpath d='M18 20l14 12-14 12M34 20l14 12-14 12' stroke='%23231f14' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  body { background: var(--tarmac); color: var(--on-dark); }
+  .wrap { max-width: 860px; margin: 0 auto; padding: clamp(40px, 7vw, 88px) clamp(18px, 4vw, 32px) 80px; }
+  .wrap > header { display: flex; align-items: center; gap: 14px; margin-bottom: clamp(36px, 6vw, 64px); }
+  h1 { font-size: clamp(2.6rem, 7vw, 4.2rem); margin: 18px 0 10px; }
+  h1 .amber { color: var(--amber); }
+  .lede { color: var(--on-dark-muted); font-size: 1.15rem; max-width: 56ch; }
+
+  .phase { border-top: 1px solid var(--line-dark); padding: 26px 0; display: grid; grid-template-columns: 120px 1fr; gap: 18px; }
+  .phase:last-of-type { border-bottom: 1px solid var(--line-dark); }
+  .phase .tag { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; color: var(--amber); text-transform: uppercase; letter-spacing: 0.04em; }
+  .phase .tag small { display: block; font-family: var(--font-body); font-weight: 500; font-size: 0.8rem; color: var(--on-dark-muted); letter-spacing: 0.02em; text-transform: none; }
+  .phase h2 { font-size: 1.5rem; margin-bottom: 8px; }
+  .phase p, .phase li { color: var(--on-dark-muted); font-size: 1rem; }
+  .phase strong { color: var(--on-dark); font-weight: 600; }
+  .phase ul { margin: 10px 0 0 18px; display: grid; gap: 6px; }
+
+  .price-row { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin-top: clamp(36px, 6vw, 56px); }
+  .price {
+    background: var(--tarmac-2); border: 1px solid var(--line-dark);
+    border-radius: var(--radius-card); padding: 24px;
+  }
+  .price .n { font-family: var(--font-display); font-weight: 700; font-size: 2.4rem; }
+  .price .n small { font-size: 1.1rem; color: var(--on-dark-muted); font-weight: 500; }
+  .price p { color: var(--on-dark-muted); font-size: 0.95rem; margin-top: 6px; }
+  .price.hero-price { background: var(--amber); border-color: var(--amber); color: var(--ink); }
+  .price.hero-price p { color: oklch(0.35 0.04 80); }
+
+  .anchor-note { margin-top: 18px; color: var(--on-dark-muted); font-size: 0.95rem; max-width: 62ch; }
+  .anchor-note strong { color: var(--on-dark); }
+
+  @media (max-width: 560px) { .phase { grid-template-columns: 1fr; gap: 6px; } }
+  @media print {
+    body { background: white; color: black; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="mark" href="index.html" style="color: var(--on-dark); text-decoration: none;">
+      <span class="chev" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none"><path d="M18 20l14 12-14 12M34 20l14 12-14 12" stroke="oklch(0.18 0.012 80)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="wordmark">MJ Recruitment<small>The plan</small></span>
+    </a>
+  </header>
+
+  <h1>MJ online, in <span class="amber">three phases</span></h1>
+  <p class="lede">You already own <strong style="color: var(--on-dark);">mjevents.co.uk</strong> (paid up to 2028 — it just needs a site on it).
+    D&amp;J paid a web agency for their system. This is yours, built by someone who's
+    stood at the pickup point at 6:30am.</p>
+
+  <div style="margin-top: clamp(36px, 6vw, 56px);">
+    <div class="phase">
+      <p class="tag">Phase 1 <small>ready now — you've just seen it</small></p>
+      <div>
+        <h2>Website + run sheet tool</h2>
+        <ul>
+          <li><strong>Client side:</strong> "get availability" enquiry form — new caterers and venues can find and book MJ</li>
+          <li><strong>Worker side:</strong> apply in under a minute, licence &amp; car captured up front</li>
+          <li><strong>Dee's run sheet:</strong> tick the crew, it builds the cars, times and the WhatsApp message — pickups and drop-offs</li>
+          <li>Live on mjevents.co.uk within 2 weeks of a yes</li>
+        </ul>
+      </div>
+    </div>
+    <div class="phase">
+      <p class="tag">Phase 2 <small>next</small></p>
+      <div>
+        <h2>Availability link + auto chase-ups</h2>
+        <ul>
+          <li>Dee posts <strong>one link per date-set</strong> — workers tap the dates they can do; the tally builds itself</li>
+          <li><strong>Night-before reminders</strong> with 👍 tracking — silence gets flagged before it becomes a no-show</li>
+        </ul>
+      </div>
+    </div>
+    <div class="phase">
+      <p class="tag">Phase 3 <small>later</small></p>
+      <div>
+        <h2>Timesheets + staff portal</h2>
+        <ul>
+          <li><strong>Hours &amp; timesheets</strong> per event — names to the client and pay-ready numbers in one place</li>
+          <li><strong>Staff portal</strong> — no passwords: workers log in with their phone number, a one-time text code and a 4-digit PIN. Forgotten PINs reset by us, not by Dee</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="price-row">
+    <div class="price hero-price">
+      <p class="n">£1,950</p>
+      <p>Phase 1 build — site, forms, run sheet tool, live on your domain</p>
+    </div>
+    <div class="price">
+      <p class="n">£50<small>/month</small></p>
+      <p>Hosting, upkeep, changes and support — cancel any time</p>
+    </div>
+    <div class="price">
+      <p class="n">Per phase</p>
+      <p>Phases 2 and 3 quoted separately, only if phase 1 earns it</p>
+    </div>
+  </div>
+
+  <p class="anchor-note">For scale: a web agency quotes <strong>£5,000–£15,000</strong> for a bespoke
+    site with a management system like this, plus bigger monthly fees — and they've never
+    worked one of your events.</p>
+</div>
+</body>
+</html>
