@@ -41,11 +41,37 @@
   .anchor-note { margin-top: 18px; color: var(--on-dark-muted); font-size: 0.95rem; max-width: 62ch; }
   .anchor-note strong { color: var(--on-dark); }
 
+
+  /* Stat tiles + returns + animations */
+  .sec-h { font-size: clamp(1.9rem, 4.5vw, 2.6rem); margin: clamp(44px, 7vw, 68px) 0 18px; }
+  .stats { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+  .stat { background: var(--tarmac-2); border: 1px solid var(--line-dark); border-radius: var(--radius-card); padding: 22px; }
+  .stat .v { font-weight: 600; font-size: clamp(2.4rem, 5vw, 3rem); line-height: 1; color: #fff; }
+  .stat .l { margin-top: 8px; font-weight: 600; color: var(--on-dark); }
+  .stat .s { margin-top: 8px; font-size: 0.92rem; color: var(--on-dark-muted); }
+  .growth-figures { margin-top: 18px; display: grid; gap: 10px; }
+  .growth-figures .gf { color: var(--on-dark-muted); font-size: 1rem; }
+  .growth-figures .gf strong { color: var(--brand-bright); font-weight: 600; font-size: 1.4rem; margin-right: 8px; }
+  .returns { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .ret { background: var(--tarmac-2); border: 1px solid var(--line-dark); border-radius: var(--radius-card); padding: 22px; }
+  .ret h3 { font-size: 1.35rem; margin-bottom: 4px; }
+  .ret .big { color: var(--brand-bright); font-weight: 600; font-size: 1.1rem; margin-bottom: 10px; }
+  .ret p { color: var(--on-dark-muted); font-size: 0.95rem; }
+  .ill-note { margin-top: 12px; font-size: 0.85rem; color: var(--on-dark-muted); }
+  .rise.pending { opacity: 0; transform: translateY(16px); }
+  .rise.shown { opacity: 1; transform: none; transition: opacity 550ms var(--ease-out), transform 550ms var(--ease-out); }
+  .stats .rise.shown:nth-child(2) { transition-delay: 80ms; }
+  .stats .rise.shown:nth-child(3) { transition-delay: 160ms; }
+  .stats .rise.shown:nth-child(4) { transition-delay: 240ms; }
+  .returns .rise.shown:nth-child(2) { transition-delay: 80ms; }
+  .returns .rise.shown:nth-child(3) { transition-delay: 160ms; }
+  @media (prefers-reduced-motion: reduce) { .rise.pending { opacity: 1; transform: none; } }
+
   @media (max-width: 560px) { .phase { grid-template-columns: 1fr; gap: 6px; } }
   @media print {
     body { background: white; }
     .wrap * { color: #111 !important; }
-    .price, .price.hero-price { background: white; border: 1px solid #888; }
+    .price, .price.hero-price, .stat, .ret { background: white; border: 1px solid #888; }
   }
 </style>
 </head>
@@ -63,6 +89,31 @@
     D&amp;J paid a web agency for their system. This is yours, built by someone who's
     stood at the pickup point at 6:30am.</p>
 
+  <h2 class="sec-h rise">Why a website, why now</h2>
+  <div class="stats">
+    <div class="stat rise">
+      <p class="v"><span class="count" data-target="0">0</span></p>
+      <p class="l">MJ's web presence today</p>
+      <p class="s">A dead domain and a Facebook page. Every new job starts and ends on word of mouth.</p>
+    </div>
+    <div class="stat rise">
+      <p class="v"><span class="count" data-target="75" data-suffix="%">75%</span></p>
+      <p class="l">judge a business by its website</p>
+      <p class="s">Stanford credibility research. With no site, MJ fails that check before the first call.</p>
+    </div>
+    <div class="stat rise">
+      <p class="v"><span class="count" data-target="6000" data-suffix="+">6,000+</span></p>
+      <p class="l">traders in D&amp;J's database alone</p>
+      <p class="s">One client's contact book. Every trader in it needs staff on event day.</p>
+    </div>
+    <div class="stat rise">
+      <p class="v"><span class="count" data-target="592">592</span></p>
+      <p class="l">UK music festivals in 2025</p>
+      <p class="s">Each one crews food and drink units. MJ has already worked the biggest.</p>
+    </div>
+  </div>
+
+
   <div style="margin-top: clamp(36px, 6vw, 56px);">
     <div class="phase">
       <p class="tag">Phase 1 <small>ready now, you've just seen it</small></p>
@@ -71,7 +122,7 @@
         <ul>
           <li><strong>Client side:</strong> "get availability" enquiry form, so new caterers and venues can find and book MJ</li>
           <li><strong>Worker side:</strong> apply in under a minute, licence &amp; car captured up front</li>
-          <li><strong>Dee's run sheet:</strong> tick the crew and it builds the cars, times and the WhatsApp message, pickups and drop-offs both</li>
+          <li><strong>Dee's run sheet:</strong> tick the crew and it builds the cars, times and the WhatsApp message, pickups and drop-offs both. It counts <strong>shifts per person</strong> as sheets go out, so experience shows at a glance</li>
           <li>Live on mjevents.co.uk within 2 weeks of a yes</li>
         </ul>
       </div>
@@ -107,9 +158,42 @@
           <li><strong>The form qualifies:</strong> enquiries arrive with numbers, dates and urgency already answered, so the call back is a close, not a fact-find</li>
           <li><strong>Overdeliver early:</strong> a new client's first booking gets the strongest crew and a check-in call. Happy first order, repeat client</li>
         </ul>
+
+        <div class="growth-figures">
+          <p class="gf rise"><strong><span class="count" data-target="6500" data-suffix="+">6,500+</span></strong> mobile caterers and street food businesses registered with NCASS UK-wide</p>
+          <p class="gf rise"><strong>300+</strong> caterers and concessionaires estimated within an hour of Leicester. Week one: pull the full list from Google Maps</p>
+          <p class="gf rise"><strong>10</strong> calls a week reaches every one of them inside a single season</p>
+        </div>
       </div>
     </div>
   </div>
+
+
+  <h2 class="sec-h rise">What the £1,950 buys back</h2>
+  <div class="returns">
+    <div class="ret rise">
+      <h3>New clients</h3>
+      <p class="big">1 new caterer ≈ build paid for</p>
+      <p>One caterer booking a single festival weekend typically covers the whole build.
+        Every event after that is margin. The enquiry form does the qualifying, so the
+        call back is a close, not a fact-find.</p>
+    </div>
+    <div class="ret rise">
+      <h3>More workers, fewer gaps</h3>
+      <p class="big">Applications 24/7, pre-qualified</p>
+      <p>The apply form works nights and weekends and captures licence, car and postcode
+        up front. A bigger pool means a late drop-out becomes a text to the next standby,
+        not a lost job and an unhappy client.</p>
+    </div>
+    <div class="ret rise">
+      <h3>Workers who stay</h3>
+      <p class="big">Shift counts + a portal they can see</p>
+      <p>The run sheet already counts shifts per person. Phase 3 adds hours and pay
+        history behind a phone-number login. Casual staff who can see their record stick
+        around, and every worker kept is a recruitment saved.</p>
+    </div>
+  </div>
+  <p class="ill-note">The stats above are sourced (Stanford, NCASS, AIF 2025, D&amp;J's own site). The projections are ours and depend on the rates MJ sets.</p>
 
   <div class="price-row">
     <div class="price hero-price">
@@ -130,5 +214,53 @@
     site with a management system like this, plus bigger monthly fees. And they've never
     worked one of your events.</p>
 </div>
+
+<script>
+(() => {
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduced && "IntersectionObserver" in window) {
+    document.querySelectorAll(".rise").forEach((el) => {
+      if (el.getBoundingClientRect().top > innerHeight) el.classList.add("pending");
+    });
+    const io = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add("shown");
+      e.target.classList.remove("pending");
+      io.unobserve(e.target);
+    }), { rootMargin: "0px 0px -8% 0px" });
+    document.querySelectorAll(".rise.pending").forEach((el) => io.observe(el));
+  }
+  // Count-up is an enhancement: the markup already holds the final values.
+  const fmt = (n) => n.toLocaleString("en-GB");
+  const finish = (el) => {
+    el._ran = true;
+    el.textContent = fmt(+el.dataset.target) + (el.dataset.suffix || "");
+  };
+  const run = (el) => {
+    const target = +el.dataset.target, suf = el.dataset.suffix || "";
+    if (el._ran) return;
+    el._ran = true;
+    if (!target) { el.textContent = fmt(target) + suf; return; }
+    const t0 = performance.now(), dur = 1100;
+    const tick = (t) => {
+      const p = Math.min(1, (t - t0) / dur);
+      const e = 1 - Math.pow(1 - p, 4);
+      el.textContent = fmt(Math.round(target * e)) + suf;
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+  const counts = document.querySelectorAll(".count");
+  if (!reduced && "IntersectionObserver" in window) {
+    counts.forEach((c) => { c.textContent = "0" + (c.dataset.suffix ? "" : ""); });
+    const io2 = new IntersectionObserver((es) => es.forEach((e) => {
+      if (e.isIntersecting) { run(e.target); io2.unobserve(e.target); }
+    }), { threshold: 0.4 });
+    counts.forEach((c) => io2.observe(c));
+    // Hidden tabs and odd embeds never fire observers; make sure the truth lands anyway
+    setTimeout(() => counts.forEach((c) => { if (!c._ran) finish(c); }), 5000);
+  }
+})();
+</script>
 </body>
 </html>

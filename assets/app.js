@@ -18,36 +18,36 @@ const AREAS = {
 
 // tag = how they're @-mentioned in the group
 const BASE_STAFF = [
-  { id: "nabay",    name: "Nabay",       tag: "Nabay",      area: "Hamilton",      lat: 52.6580, lng: -1.0500, car: true  },
-  { id: "paul",     name: "Paul",        tag: "Laup",       area: "Evington",      lat: 52.6280, lng: -1.0830, car: true  },
-  { id: "aaron",    name: "Aaron Dixon", tag: "~Aaron Dixon", area: "Evington",    lat: 52.6320, lng: -1.0700, car: true  },
-  { id: "shilzie",  name: "Shilzie",     tag: "~shilzie",   area: "Belgrave",      lat: 52.6560, lng: -1.1190, car: true  },
-  { id: "zed",      name: "Z",           tag: "~Z",         area: "Wigston",       lat: 52.5900, lng: -1.1010, car: true  },
-  { id: "naod",     name: "Naod",        tag: "~Naod",      area: "Hamilton",      lat: 52.6580, lng: -1.0500, car: false },
-  { id: "siem",     name: "Siem",        tag: "~siem",      area: "Hamilton",      lat: 52.6580, lng: -1.0500, car: false },
-  { id: "zane",     name: "Zane",        tag: "~Zane",      area: "Wigston",       lat: 52.5850, lng: -1.0930, car: false },
-  { id: "kyan",     name: "Kyan",        tag: "~Kyan",      area: "Wigston",       lat: 52.5850, lng: -1.0930, car: false },
-  { id: "zuri",     name: "Zuri",        tag: "Zuri",       area: "Wigston",       lat: 52.5860, lng: -1.1060, car: false },
-  { id: "paige",    name: "Paige",       tag: "~Paige",     area: "Evington",      lat: 52.6260, lng: -1.0880, car: false },
-  { id: "eleanor",  name: "Eleanor",     tag: "~Eleanor",   area: "Glenfield",     lat: 52.6490, lng: -1.2060, car: false },
-  { id: "logan",    name: "Logan",       tag: "~Logan",     area: "Oadby",         lat: 52.5990, lng: -1.0800, car: false },
-  { id: "ek",       name: "Ek",          tag: "~Ek",        area: "City centre",   lat: 52.6340, lng: -1.1150, car: false },
-  { id: "kay",      name: "K",           tag: "~K",         area: "Wigston",       lat: 52.5880, lng: -1.0980, car: false },
-  { id: "ziggy",    name: "Ziggy",       tag: "~Ziggy",     area: "Wigston",       lat: 52.5920, lng: -1.1020, car: false },
-  { id: "bright",   name: "Bright",      tag: "~Bright",    area: "Wigston",       lat: 52.6000, lng: -1.1150, car: false },
-  { id: "rihanna",  name: "Rihanna",     tag: "~Rihanna",   area: "Belgrave",      lat: 52.6480, lng: -1.1200, car: false },
-  { id: "zakaria",  name: "Zakaria",     tag: "~Zakaria",   area: "Highfields",    lat: 52.6270, lng: -1.1150, car: false },
-  { id: "chloe",    name: "Chloe",       tag: "~chloe",     area: "Hamilton",      lat: 52.6550, lng: -1.0450, car: false },
-  { id: "jacob",    name: "Jacob",       tag: "~Jacob",     area: "Evington",      lat: 52.6220, lng: -1.0750, car: false },
-  { id: "sulaimaan",name: "Sulaimaan",   tag: "~Sulaimaan", area: "Highfields",    lat: 52.6300, lng: -1.1100, car: false },
-  { id: "mia",      name: "Mia",         tag: "~Mia",       area: "Braunstone",    lat: 52.6150, lng: -1.1700, car: false },
-  { id: "dev",      name: "Dev",         tag: "~Dev",       area: "Beaumont Leys", lat: 52.6660, lng: -1.1500, car: true  },
+  { id: "nabay",    name: "Nabay",       tag: "Nabay",      area: "Hamilton",      lat: 52.6580, lng: -1.0500, car: true, shifts: 46 },
+  { id: "paul",     name: "Paul",        tag: "Laup",       area: "Evington",      lat: 52.6280, lng: -1.0830, car: true, shifts: 41 },
+  { id: "aaron",    name: "Aaron Dixon", tag: "~Aaron Dixon", area: "Evington",    lat: 52.6320, lng: -1.0700, car: true, shifts: 33 },
+  { id: "shilzie",  name: "Shilzie",     tag: "~shilzie",   area: "Belgrave",      lat: 52.6560, lng: -1.1190, car: true, shifts: 38 },
+  { id: "zed",      name: "Z",           tag: "~Z",         area: "Wigston",       lat: 52.5900, lng: -1.1010, car: true, shifts: 29 },
+  { id: "naod",     name: "Naod",        tag: "~Naod",      area: "Hamilton",      lat: 52.6580, lng: -1.0500, car: false, shifts: 22 },
+  { id: "siem",     name: "Siem",        tag: "~siem",      area: "Hamilton",      lat: 52.6580, lng: -1.0500, car: false, shifts: 21 },
+  { id: "zane",     name: "Zane",        tag: "~Zane",      area: "Wigston",       lat: 52.5850, lng: -1.0930, car: false, shifts: 12 },
+  { id: "kyan",     name: "Kyan",        tag: "~Kyan",      area: "Wigston",       lat: 52.5850, lng: -1.0930, car: false, shifts: 11 },
+  { id: "zuri",     name: "Zuri",        tag: "Zuri",       area: "Wigston",       lat: 52.5860, lng: -1.1060, car: false, shifts: 17 },
+  { id: "paige",    name: "Paige",       tag: "~Paige",     area: "Evington",      lat: 52.6260, lng: -1.0880, car: false, shifts: 15 },
+  { id: "eleanor",  name: "Eleanor",     tag: "~Eleanor",   area: "Glenfield",     lat: 52.6490, lng: -1.2060, car: false, shifts: 8 },
+  { id: "logan",    name: "Logan",       tag: "~Logan",     area: "Oadby",         lat: 52.5990, lng: -1.0800, car: false, shifts: 6 },
+  { id: "ek",       name: "Ek",          tag: "~Ek",        area: "City centre",   lat: 52.6340, lng: -1.1150, car: false, shifts: 19 },
+  { id: "kay",      name: "K",           tag: "~K",         area: "Wigston",       lat: 52.5880, lng: -1.0980, car: false, shifts: 9 },
+  { id: "ziggy",    name: "Ziggy",       tag: "~Ziggy",     area: "Wigston",       lat: 52.5920, lng: -1.1020, car: false, shifts: 13 },
+  { id: "bright",   name: "Bright",      tag: "~Bright",    area: "Wigston",       lat: 52.6000, lng: -1.1150, car: false, shifts: 7 },
+  { id: "rihanna",  name: "Rihanna",     tag: "~Rihanna",   area: "Belgrave",      lat: 52.6480, lng: -1.1200, car: false, shifts: 10 },
+  { id: "zakaria",  name: "Zakaria",     tag: "~Zakaria",   area: "Highfields",    lat: 52.6270, lng: -1.1150, car: false, shifts: 14 },
+  { id: "chloe",    name: "Chloe",       tag: "~chloe",     area: "Hamilton",      lat: 52.6550, lng: -1.0450, car: false, shifts: 25 },
+  { id: "jacob",    name: "Jacob",       tag: "~Jacob",     area: "Evington",      lat: 52.6220, lng: -1.0750, car: false, shifts: 5 },
+  { id: "sulaimaan",name: "Sulaimaan",   tag: "~Sulaimaan", area: "Highfields",    lat: 52.6300, lng: -1.1100, car: false, shifts: 4 },
+  { id: "mia",      name: "Mia",         tag: "~Mia",       area: "Braunstone",    lat: 52.6150, lng: -1.1700, car: false, shifts: 2 },
+  { id: "dev",      name: "Dev",         tag: "~Dev",       area: "Beaumont Leys", lat: 52.6660, lng: -1.1500, car: true, shifts: 3 },
 ];
 
 const POINTS = [
-  { id: "tesco",    name: "Tesco Hamilton",       msg: "tesco Hamilton",       lat: 52.6600, lng: -1.0470, core: true  },
-  { id: "lidl",     name: "Lidl St George's",     msg: "lidl st George's",     lat: 52.6320, lng: -1.1180, core: true  },
-  { id: "mcd",      name: "Wigston McDonald's",   msg: "Wigston McDonald's",   lat: 52.5930, lng: -1.0990, core: true  },
+  { id: "tesco",    name: "Tesco Hamilton",       msg: "tesco Hamilton",       lat: 52.6600, lng: -1.0470, core: true },
+  { id: "lidl",     name: "Lidl St George's",     msg: "lidl st George's",     lat: 52.6320, lng: -1.1180, core: true },
+  { id: "mcd",      name: "Wigston McDonald's",   msg: "Wigston McDonald's",   lat: 52.5930, lng: -1.0990, core: true },
   { id: "meynells", name: "Meynell's Gorse P&R",  msg: "Meynell's Gorse park and ride", lat: 52.6350, lng: -1.2040, core: false },
   { id: "beaumont", name: "Tesco Beaumont Leys",  msg: "tesco Beaumont Leys",  lat: 52.6650, lng: -1.1550, core: false },
   { id: "fosse",    name: "Fosse Park",           msg: "Fosse Park",           lat: 52.6100, lng: -1.1690, core: false },
@@ -78,6 +78,30 @@ const store = {
 
 const customStaff = store.get("mj_custom_staff", []);
 const STAFF = () => BASE_STAFF.concat(customStaff);
+
+// Shifts: seed counts + a log of copied run sheets ({dateIso: [ids]}), so
+// each person's tally grows once per date they were actually sent out on.
+const shiftLog = store.get("mj_shiftlog", {});
+function shiftsOf(p) {
+  let n = p.shifts || 0;
+  for (const ids of Object.values(shiftLog)) if (ids.includes(p.id)) n++;
+  return n;
+}
+function logShifts() {
+  if (!state.built) return;
+  const ids = [];
+  state.built.cars.forEach((car) => {
+    ids.push(car.driver.id);
+    car.stops.forEach((st) => st.pax.forEach((px) => ids.push(px.id)));
+  });
+  state.dates.forEach((d) => {
+    const set = new Set(shiftLog[d] || []);
+    ids.forEach((i) => set.add(i));
+    shiftLog[d] = [...set];
+  });
+  store.set("mj_shiftlog", shiftLog);
+  renderCrew();
+}
 
 const DEMO_SELECTED = ["nabay","paul","zed","naod","siem","zane","kyan","zuri","paige","eleanor","logan","ek","zakaria"];
 
@@ -404,7 +428,7 @@ function renderCrew() {
       <span class="avatar" aria-hidden="true">${initials(p.name)}</span>
       <span class="who">
         <span class="nm">${esc(p.name)} ${p.car ? '<span class="badge-car">DRIVER 🚗</span>' : ""}</span>
-        <span class="ar">${esc(p.area)}${custom ? " · added by you" : ""}</span>
+        <span class="ar">${esc(p.area)} · ${shiftsOf(p)} shift${shiftsOf(p) === 1 ? "" : "s"}${custom ? " · added by you" : ""}</span>
       </span>
       <span class="tick" aria-hidden="true">✓</span>`;
     row.addEventListener("click", () => {
@@ -705,12 +729,14 @@ $("#build-btn").addEventListener("click", () => {
 $("#copy-btn").addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(state.message || "");
+    if (state.mode === "pickup") logShifts();
     toast("Copied. Paste it into the group ✓");
   } catch {
     const ta = document.createElement("textarea");
     ta.value = state.message || "";
     document.body.appendChild(ta); ta.select();
     document.execCommand("copy"); ta.remove();
+    if (state.mode === "pickup") logShifts();
     toast("Copied. Paste it into the group ✓");
   }
 });
