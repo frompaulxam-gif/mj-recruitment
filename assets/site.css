@@ -109,7 +109,7 @@
 /* Venue ticker */
 .venues {
   background: var(--brand-soft);
-  padding: 16px 0;
+  padding: 18px 0;
   overflow: hidden;
 }
 .venues .row span { color: var(--brand-deep); }
@@ -129,6 +129,13 @@
   letter-spacing: 0.04em;
 }
 .venues .row span::after { content: ""; }
+.venues .row.logos { align-items: center; padding: 6px 18px; }
+.venues .row.logos img {
+  height: clamp(30px, 5vw, 46px);
+  width: auto;
+  max-width: min(38vw, 210px);
+  object-fit: contain;
+}
 
 /* ---------- Shared band layout ---------- */
 .band { padding: clamp(64px, 10vw, 128px) 0; }

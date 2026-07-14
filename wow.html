@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tester · The 05:55 intro</title>
+<title>Tester · Lights up intro</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23161616'/%3E%3Ctext x='32' y='42' font-family='Arial, Helvetica, sans-serif' font-size='24' font-weight='bold' fill='%23ffffff' text-anchor='middle' letter-spacing='1'%3EMJ%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,637 +15,421 @@
     --brand: oklch(0.53 0.115 165);
     --brand-bright: oklch(0.74 0.11 165);
     --brand-deep: oklch(0.44 0.10 168);
-    --night: #070b09;
+    --brand-soft: oklch(0.95 0.025 165);
+    --night: #05080a;
     --on-dark: oklch(0.97 0 0);
+    --line: oklch(0.88 0.003 170);
     --ease-quint: cubic-bezier(0.22, 1, 0.36, 1);
     --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
     --font-body: "Barlow", system-ui, sans-serif;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: auto; }
-  body { font-family: var(--font-body); background: var(--night); color: var(--on-dark); overflow-x: hidden; }
+  body { font-family: var(--font-body); background: #fff; color: var(--ink); overflow-x: hidden; }
+  img { max-width: 100%; display: block; }
 
-  /* ============ ACT I: the intro ============ */
-  .intro {
-    position: relative;
-    height: 100vh;
-    height: 100svh;
+  /* ============ HERO (the real one) with a pinned scroll handoff ============ */
+  .heroWrap { position: relative; height: 175vh; }
+  .hero {
+    position: sticky; top: 0;
+    height: 100vh; height: 100svh;
     overflow: hidden;
-    background: var(--night);
+    background: oklch(0.32 0.075 168);
+    color: var(--on-dark);
   }
-  #sky { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-
-  .clock {
-    position: absolute;
-    top: 22px; right: 26px;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    letter-spacing: 0.12em;
-    color: var(--brand-bright);
-    opacity: 0;
-    text-shadow: 0 0 18px oklch(0.74 0.11 165 / 0.55);
-    font-variant-numeric: tabular-nums;
+  .hero .photo {
+    position: absolute; inset: -4%;
+    background-image: url("assets/photos/hero.jpg");
+    background-size: cover;
+    background-position: center 30%;
+    filter: grayscale(1) contrast(1.05);
+    transform: scale(1);
+    will-change: transform;
   }
-  .clock small { display: block; font-family: var(--font-body); font-weight: 500; font-size: 0.6rem; letter-spacing: 0.3em; color: oklch(0.72 0 0); text-align: right; }
-
-  .skip {
-    position: absolute;
-    bottom: 22px; right: 26px;
-    z-index: 5;
-    font: inherit; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em;
-    color: oklch(0.72 0 0);
-    background: none; border: 1px solid oklch(0.35 0 0); border-radius: 999px;
-    padding: 8px 16px; cursor: pointer;
+  .hero .tint {
+    position: absolute; inset: 0;
+    background: linear-gradient(75deg, oklch(0.30 0.075 168 / 0.97) 0%, oklch(0.30 0.075 168 / 0.86) 42%, oklch(0.30 0.075 168 / 0.45) 100%);
   }
-  .skip:hover { color: #fff; border-color: #fff; }
-
-  /* the type that the light show delivers */
-  .intro .hero-copy {
+  .hero .inner {
     position: absolute;
     left: clamp(20px, 6vw, 90px);
     bottom: clamp(48px, 12vh, 130px);
-    z-index: 4;
+    z-index: 3;
+    will-change: transform, opacity;
   }
-  .hero-copy .mark-line {
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 18px;
-    opacity: 0; transform: translateY(14px);
-  }
-  .hero-copy .mj-box {
+  .mark-line { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; opacity: 0; transform: translateY(-40px) scale(1.5); transform-origin: left bottom; }
+  .mj-box {
     width: 44px; height: 44px; background: #fff; color: var(--ink);
     display: grid; place-items: center;
     font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; letter-spacing: 0.08em;
   }
-  .hero-copy .mark-line span {
-    font-family: var(--font-display); font-weight: 700; font-size: 1.4rem;
-    letter-spacing: 0.08em; text-transform: uppercase;
-  }
-  .hero-copy .mark-line small { display: block; font-family: var(--font-body); font-weight: 500; font-size: 0.68rem; letter-spacing: 0.2em; color: var(--brand-bright); }
-  .hero-copy h1 {
-    font-family: var(--font-display);
-    font-weight: 700;
+  .mark-line span { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .mark-line small { display: block; font-family: var(--font-body); font-weight: 500; font-size: 0.68rem; letter-spacing: 0.2em; color: var(--brand-bright); }
+  .mark-line.drop { transition: opacity 300ms var(--ease-quint), transform 480ms var(--ease-quint); opacity: 1; transform: translateY(0) scale(1); }
+
+  .hero h1 {
+    font-family: var(--font-display); font-weight: 700;
     font-size: clamp(3.4rem, 11vw, 6rem);
-    line-height: 0.96;
-    text-transform: uppercase;
-    letter-spacing: -0.01em;
+    line-height: 0.96; text-transform: uppercase; letter-spacing: -0.01em;
   }
-  .hero-copy h1 .line { display: block; overflow: hidden; }
-  .hero-copy h1 .line > i {
-    font-style: normal;
-    display: block;
-    transform: translateY(112%) skewY(4deg);
-  }
-  .hero-copy h1 .line.play > i {
-    transition: transform 850ms var(--ease-quint);
-    transform: translateY(0) skewY(0);
-  }
-  .hero-copy h1 .hl { color: var(--brand-bright); position: relative; }
-  .hero-copy .sweep {
-    position: relative; display: inline-block;
-  }
-  .hero-copy .sweep::after {
-    content: "";
-    position: absolute; left: -2%; right: -2%; bottom: 0.04em; height: 0.14em;
-    background: var(--brand);
-    transform: scaleX(0); transform-origin: left;
-  }
-  .hero-copy .sweep.play::after { transition: transform 700ms var(--ease-quint) 250ms; transform: scaleX(1); }
-  .hero-copy .sub {
-    margin-top: 20px; max-width: 46ch;
-    font-size: clamp(1rem, 2vw, 1.15rem);
-    color: oklch(0.85 0.01 165);
-    opacity: 0; transform: translateY(14px);
-  }
-  .hero-copy .cta { margin-top: 26px; display: flex; gap: 12px; opacity: 0; transform: translateY(14px); }
+  .hero h1 .line { display: block; overflow: hidden; }
+  .hero h1 .line > i { font-style: normal; display: block; transform: translateY(112%) skewY(4deg); }
+  .hero h1 .line.play > i { transition: transform 850ms var(--ease-quint); transform: translateY(0) skewY(0); }
+  .hero h1 .hl { color: var(--brand-bright); }
+  .sweep { position: relative; display: inline-block; }
+  .sweep::after { content: ""; position: absolute; left: -2%; right: -2%; bottom: 0.04em; height: 0.14em; background: var(--brand); transform: scaleX(0); transform-origin: left; }
+  .sweep.play::after { transition: transform 700ms var(--ease-quint) 250ms; transform: scaleX(1); }
+  .hero .sub { margin-top: 20px; max-width: 46ch; font-size: clamp(1rem, 2vw, 1.15rem); color: oklch(0.9 0.02 165); opacity: 0; transform: translateY(14px); }
+  .hero .cta { margin-top: 26px; display: flex; gap: 12px; flex-wrap: wrap; opacity: 0; transform: translateY(14px); }
   .fade-play { transition: opacity 700ms var(--ease-quint), transform 700ms var(--ease-quint); opacity: 1 !important; transform: translateY(0) !important; }
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    font-weight: 600; font-size: 1rem;
-    padding: 14px 26px; border-radius: 10px; border: none; cursor: pointer; text-decoration: none;
-    min-height: 48px;
-  }
+  .btn { display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1rem; padding: 14px 26px; border-radius: 10px; border: none; cursor: pointer; text-decoration: none; min-height: 48px; }
   .btn-brand { background: var(--brand); color: #fff; }
   .btn-light { background: #fff; color: var(--ink); }
 
-  .down-cue {
-    position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%);
-    z-index: 4; opacity: 0;
-    color: oklch(0.72 0 0); font-size: 0.78rem; letter-spacing: 0.22em; text-transform: uppercase;
-    text-align: center;
+  /* the intro canvas sits over the hero and dissolves away */
+  #show { position: absolute; inset: 0; z-index: 5; background: var(--night); transition: opacity 900ms var(--ease-quint); }
+  #show.gone { opacity: 0; pointer-events: none; }
+  .skip {
+    position: absolute; bottom: 22px; right: 26px; z-index: 6;
+    font: inherit; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em;
+    color: oklch(0.72 0 0); background: none; border: 1px solid oklch(0.35 0 0);
+    border-radius: 999px; padding: 8px 16px; cursor: pointer;
+    transition: opacity 400ms;
   }
-  .down-cue::after { content: ""; display: block; width: 1px; height: 34px; margin: 8px auto 0; background: linear-gradient(oklch(0.72 0 0), transparent); animation: drip 1.6s var(--ease-quint) infinite; }
+  .skip.gone { opacity: 0; pointer-events: none; }
+
+  .down-cue {
+    position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%);
+    z-index: 3; opacity: 0;
+    color: oklch(0.85 0.02 165); font-size: 0.75rem; letter-spacing: 0.22em; text-transform: uppercase;
+  }
+  .down-cue::after { content: ""; display: block; width: 1px; height: 30px; margin: 8px auto 0; background: linear-gradient(oklch(0.85 0.02 165), transparent); animation: drip 1.6s var(--ease-quint) infinite; }
   @keyframes drip { 0% { transform: scaleY(0); transform-origin: top; } 55% { transform: scaleY(1); transform-origin: top; } 56% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
 
-  /* ============ ACT II: the scroll sunrise ============ */
-  .journey { position: relative; height: 340vh; background: var(--night); }
-  .stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
-  #dawn { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .stage .big-time {
-    position: absolute; top: clamp(18px, 6vh, 60px); left: clamp(20px, 6vw, 90px);
-    font-family: var(--font-display); font-weight: 700;
-    font-size: clamp(4rem, 14vw, 9rem);
-    line-height: 1; letter-spacing: 0.02em;
-    font-variant-numeric: tabular-nums;
-    color: #fff; mix-blend-mode: difference;
+  /* ============ the normal page continues, unchanged ============ */
+  .venues { background: var(--brand-soft); padding: 18px 0; }
+  .venues .row {
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+    column-gap: clamp(24px, 5vw, 64px); row-gap: 10px;
+    max-width: 1180px; margin: 0 auto; padding: 6px 18px;
   }
-  .stage .big-time small { display: block; font-family: var(--font-body); font-weight: 500; font-size: clamp(0.75rem, 1.6vw, 1rem); letter-spacing: 0.3em; text-transform: uppercase; color: #fff; }
-  .stage .caption {
-    position: absolute; right: clamp(20px, 6vw, 90px); bottom: clamp(90px, 18vh, 170px);
-    width: min(80vw, 480px); text-align: right;
-    font-family: var(--font-display); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em;
-    font-size: clamp(1.5rem, 4vw, 2.6rem); line-height: 1.05;
-    color: #fff; mix-blend-mode: difference;
-  }
-  .stage .caption .cap { position: absolute; right: 0; bottom: 0; max-width: 100%; opacity: 0; transform: translateY(12px); transition: opacity 400ms var(--ease-quint), transform 400ms var(--ease-quint); }
-  .stage .caption .cap.on { opacity: 1; transform: none; }
-  .journey-end {
-    padding: 12vh clamp(20px, 6vw, 90px) 16vh;
-    background: #fff; color: var(--ink);
-  }
-  .journey-end h2 { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; font-size: clamp(2rem, 6vw, 3.4rem); max-width: 16ch; }
-  .journey-end p { margin-top: 14px; max-width: 60ch; color: oklch(0.44 0 0); font-size: 1.05rem; }
-  .tester-note {
-    margin-top: 30px; display: inline-block;
-    border: 1.5px solid var(--brand); color: var(--brand-deep);
-    border-radius: 999px; padding: 10px 18px; font-weight: 600; font-size: 0.9rem;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .down-cue::after { animation: none; }
-  }
+  .venues img { height: clamp(30px, 5vw, 46px); width: auto; max-width: min(38vw, 210px); object-fit: contain; }
+
+  .doors { display: grid; grid-template-columns: 1fr; }
+  @media (min-width: 760px) { .doors { grid-template-columns: 1fr 1fr; } }
+  .door { display: block; padding: clamp(36px, 6vw, 64px) clamp(18px, 4vw, 56px); text-decoration: none; }
+  .door small { display: block; font-weight: 500; font-size: 1rem; opacity: 0.75; margin-bottom: 6px; }
+  .door h2 { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; font-size: clamp(2rem, 4.5vw, 2.9rem); margin-bottom: 10px; }
+  .door p { margin-bottom: 16px; max-width: 44ch; font-size: 1.02rem; opacity: 0.9; }
+  .door .go { font-weight: 600; font-size: 1.05rem; }
+  .door-white { background: #fff; color: var(--ink); border-bottom: 1px solid var(--line); }
+  .door-white .go { color: var(--brand-deep); }
+  .door-green { background: var(--brand); color: #fff; }
+  .door-green .go { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+
+  .tester-note { background: #fff; padding: 8vh clamp(20px, 6vw, 90px) 12vh; }
+  .tester-note h2 { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; font-size: clamp(1.8rem, 5vw, 2.8rem); max-width: 20ch; }
+  .tester-note p { margin-top: 12px; max-width: 60ch; color: oklch(0.44 0 0); }
+  .tester-note .pill { margin-top: 22px; display: inline-block; border: 1.5px solid var(--brand); color: var(--brand-deep); border-radius: 999px; padding: 10px 18px; font-weight: 600; font-size: 0.9rem; }
+  @media (prefers-reduced-motion: reduce) { .down-cue::after { animation: none; } }
 </style>
 </head>
 <body>
 
-<!-- ============ ACT I ============ -->
-<section class="intro" id="intro">
-  <canvas id="sky"></canvas>
-  <p class="clock" id="clock">05:55<small>LEICESTER</small></p>
+<!-- ============ HERO with intro + scroll handoff ============ -->
+<div class="heroWrap" id="heroWrap">
+  <section class="hero" id="hero">
+    <div class="photo" id="photo"></div>
+    <div class="tint"></div>
 
-  <div class="hero-copy">
-    <div class="mark-line" id="markline">
-      <span class="mj-box">MJ</span>
-      <span>Recruit<small>Hospitality specialists</small></span>
+    <div class="inner" id="heroInner">
+      <div class="mark-line" id="markline">
+        <span class="mj-box">MJ</span>
+        <span>Recruit<small>Hospitality specialists</small></span>
+      </div>
+      <h1 aria-label="Event crews. On site. On time.">
+        <span class="line"><i>Event crews.</i></span>
+        <span class="line"><i>On site.</i></span>
+        <span class="line"><i class="hl"><span class="sweep">On time.</span></i></span>
+      </h1>
+      <p class="sub" id="sub">Leicester's biggest hospitality staffing crew, behind the food
+        at the UK's biggest events.</p>
+      <div class="cta" id="cta">
+        <a class="btn btn-brand" href="#doors">Hire staff</a>
+        <a class="btn btn-light" href="#doors">Join the crew</a>
+      </div>
     </div>
-    <h1 aria-label="Event crews. On site. On time.">
-      <span class="line"><i>Event crews.</i></span>
-      <span class="line"><i>On site.</i></span>
-      <span class="line"><i class="hl"><span class="sweep">On time.</span></i></span>
-    </h1>
-    <p class="sub" id="sub">Leicester's biggest hospitality staffing crew. Three cars left home
-      before sunrise to make this headline true.</p>
-    <div class="cta" id="cta">
-      <a class="btn btn-brand" href="#journey">Hire staff</a>
-      <a class="btn btn-light" href="#journey">Join the crew</a>
-    </div>
+
+    <p class="down-cue" id="cue">Scroll</p>
+    <canvas id="show"></canvas>
+    <button class="skip" id="skip" type="button">Skip intro</button>
+  </section>
+</div>
+
+<!-- ============ the page as it already exists, untouched ============ -->
+<div class="venues" aria-label="Events our crews have worked">
+  <div class="row">
+    <img src="assets/logos/creamfields.png" alt="Creamfields">
+    <img src="assets/logos/download.png" alt="Download Festival">
+    <img src="assets/logos/trent-bridge.png" alt="Trent Bridge">
+    <img src="assets/logos/donington.png" alt="Donington Park">
+    <img src="assets/logos/warwick.png" alt="Warwick Castle">
   </div>
+</div>
 
-  <p class="down-cue" id="cue">The morning, scrubbed</p>
-  <button class="skip" id="skip" type="button">Skip intro</button>
+<section class="doors" id="doors" aria-label="Choose your path">
+  <a class="door door-white" href="#">
+    <small>Are you a...</small>
+    <h2>Caterer or trader?</h2>
+    <p>You run food or drink units at events and you need staff who actually turn up.
+      We supply crews of 5 to 50, briefed and delivered to site.</p>
+    <span class="go">Hire staff →</span>
+  </a>
+  <a class="door door-green" href="#">
+    <small>Are you a...</small>
+    <h2>Worker?</h2>
+    <p>You want paid shifts at the UK's biggest festivals and venues, with flexible
+      dates and a free lift to site from Leicester.</p>
+    <span class="go">Join the crew →</span>
+  </a>
 </section>
 
-<!-- ============ ACT II ============ -->
-<section class="journey" id="journey">
-  <div class="stage">
-    <canvas id="dawn"></canvas>
-    <p class="big-time" id="bigtime">05:55<small>Scroll: you are the morning</small></p>
-    <div class="caption">
-      <span class="cap" data-seg="0">Alarms across Leicester</span>
-      <span class="cap" data-seg="1">06:30 · Tesco Hamilton, collected</span>
-      <span class="cap" data-seg="2">06:50 · Lidl St George's, aboard</span>
-      <span class="cap" data-seg="3">07:55 · through the gate, together</span>
-    </div>
-  </div>
-</section>
-
-<section class="journey-end">
-  <h2>That's the whole business in one scroll.</h2>
-  <p>Crews collected before sunrise, delivered together, on time. If this intro earns its place,
-    it drops onto the real landing page with the same copy and buttons it hands over to.</p>
-  <span class="tester-note">Tester page. Not linked from the site.</span>
+<section class="tester-note">
+  <h2>Everything below the hero stays exactly as it is today.</h2>
+  <p>This tester shows the load intro (stage lights up, pyro, the MJ mark drops, headline
+    slams) and the scroll handoff (the hero photo eases forward as the page arrives). The
+    venue strip above now uses the real logos, same as the live site.</p>
+  <span class="pill">Tester page. Not linked from the site.</span>
 </section>
 
 <script>
 /* =========================================================
-   ACT I — "05:55": the run sheet come alive.
-   Canvas light-play: three cars leave home in the dark,
-   draw their routes to the pickup points, merge onto one
-   line to the venue, and the burst delivers the headline.
+   "LIGHTS UP" — event night, before doors.
+   Black stage. Spotlights sweep. Pyro rises. The MJ mark
+   drops with a shockwave and the headline slams in, then
+   the intro dissolves into the real hero underneath.
    ========================================================= */
 (() => {
-  const canvas = document.getElementById("sky");
+  const canvas = document.getElementById("show");
   const ctx = canvas.getContext("2d");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const DPR = Math.min(devicePixelRatio || 1, 2);
+  const hero = document.getElementById("hero");
   let W = 0, H = 0;
-
   const resize = () => {
-    W = canvas.clientWidth; H = canvas.clientHeight;
+    // size from the parent hero, never the canvas itself: a canvas measured
+    // before CSS applies reports its own bitmap and feeds back exponentially
+    const w = Math.min(hero.clientWidth || innerWidth, 4096);
+    const h = Math.min(hero.clientHeight || innerHeight, 4096);
+    if (!w || !h) return;
+    W = w; H = h;
     canvas.width = W * DPR; canvas.height = H * DPR;
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   };
   resize();
   addEventListener("resize", resize);
 
-  // Normalised scene geography (very-abstract Leicester)
-  const N = (x, y) => ({ x, y });
-  const HOMES = {
-    hamilton: N(0.86, 0.30),
-    evington: N(0.74, 0.52),
-    wigston:  N(0.60, 0.86),
-  };
-  const PICKUPS = [
-    { p: N(0.78, 0.20), label: "TESCO HAMILTON",      t: "06:30" },
-    { p: N(0.55, 0.44), label: "LIDL ST GEORGE'S",    t: "06:50" },
-    { p: N(0.58, 0.74), label: "WIGSTON McDONALD'S",  t: "06:30" },
-  ];
-  const MERGE = N(0.40, 0.34);
-  const VENUE = { p: N(0.10, 0.10), label: "DONINGTON PARK" };
-
-  const px = (n) => ({ x: n.x * W, y: n.y * H });
-
-  // Car paths: home → pickup (quad bezier), pickup → merge → venue
-  const CARS = [
-    { from: HOMES.hamilton, via: PICKUPS[0].p, hue: "165" },
-    { from: HOMES.evington, via: PICKUPS[1].p, hue: "165" },
-    { from: HOMES.wigston,  via: PICKUPS[2].p, hue: "165" },
-  ];
-  const bez = (a, c, b, t) => {
-    const u = 1 - t;
-    return {
-      x: u * u * a.x + 2 * u * t * c.x + t * t * b.x,
-      y: u * u * a.y + 2 * u * t * c.y + t * t * b.y,
-    };
-  };
-  const ctrl = (a, b, k = 0.22, side = 1) => {
-    const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
-    const dx = b.x - a.x, dy = b.y - a.y;
-    return { x: mx - dy * k * side, y: my + dx * k * side };
-  };
-  const easeInOut = (t) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-  const easeOut = (t) => 1 - Math.pow(1 - t, 3);
   const clamp01 = (v) => Math.max(0, Math.min(1, v));
+  const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+  const seg = (t, a, b) => clamp01((t - a) / (b - a));
 
-  // City dots (stable pseudo-random)
-  const dots = [];
-  let seed = 7;
+  // crowd silhouette: bumps along the bottom
+  let seed = 11;
   const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  for (let i = 0; i < 240; i++) dots.push({ x: rand(), y: rand(), r: rand() * 1.1 + 0.3, tw: rand() });
+  const crowd = [];
+  for (let i = 0; i < 90; i++) crowd.push({ x: rand(), r: 8 + rand() * 26, y: 0.94 + rand() * 0.05, tw: rand() });
 
-  // Trails buffer
-  const trail = document.createElement("canvas");
-  const tctx = trail.getContext("2d");
-  const resizeTrail = () => { trail.width = W * DPR; trail.height = H * DPR; tctx.setTransform(DPR, 0, 0, DPR, 0, 0); };
-  resizeTrail();
-  addEventListener("resize", resizeTrail);
-
-  // Timeline (seconds)
-  const T = {
-    gridIn:   [0.0, 1.0],
-    clockIn:  [0.5, 1.0],
-    leg1:     [1.0, 2.5],   // homes → pickups
-    labels:   [2.2, 2.8],
-    leg2:     [2.7, 4.1],   // pickups → merge → venue
-    burst:    [4.1, 4.55],
-    type:     [4.25, 5.4],
-    settle:   [4.3, 5.6],
+  // pyro particles
+  const sparks = [];
+  const EMITTERS = [0.18, 0.42, 0.62, 0.86];
+  const spawnSparks = (n) => {
+    if (sparks.length > 700) return; // hard cap: never let particles run away
+    for (let i = 0; i < n; i++) {
+      const ex = EMITTERS[(Math.random() * EMITTERS.length) | 0];
+      sparks.push({
+        x: ex * W + (Math.random() - 0.5) * 14,
+        y: H * 0.985,
+        vx: (Math.random() - 0.5) * 1.6,
+        vy: -(8 + Math.random() * 8) * (H / 900),
+        life: 1,
+        decay: 0.011 + Math.random() * 0.012,
+        w: Math.random() < 0.25,
+      });
+    }
   };
-  const TOTAL = 5.7;
-  const seg = (t, [a, b]) => clamp01((t - a) / (b - a));
 
-  const clock = document.getElementById("clock");
-  const fmtClock = (mins) => {
-    const h = Math.floor(mins / 60), m = Math.round(mins % 60);
-    return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
-  };
+  // spotlight beams: pivot above the top edge, sweep, then converge
+  const BEAMS = [
+    { px: 0.12, phase: 0.0 },
+    { px: 0.5,  phase: 0.6 },
+    { px: 0.88, phase: 1.2 },
+  ];
+
+  const T_BEAMS = [0.45, 5.4];
+  const T_PYRO = [1.6, 4.6];
+  const T_DROP = 3.3;
+  const T_TYPE = 3.55;
+  const T_FADE = 4.7;
+  const TOTAL = 5.4;
 
   let typed = false;
   const deliverType = () => {
     if (typed) return;
     typed = true;
-    document.querySelectorAll(".hero-copy h1 .line").forEach((l, i) => {
-      setTimeout(() => l.classList.add("play"), i * 130);
+    document.getElementById("markline").classList.add("drop");
+    document.querySelectorAll(".hero h1 .line").forEach((l, i) => {
+      setTimeout(() => l.classList.add("play"), 150 + i * 130);
     });
-    setTimeout(() => document.querySelector(".sweep").classList.add("play"), 550);
-    setTimeout(() => document.getElementById("markline").classList.add("fade-play"), 200);
-    setTimeout(() => document.getElementById("sub").classList.add("fade-play"), 720);
-    setTimeout(() => document.getElementById("cta").classList.add("fade-play"), 880);
-    setTimeout(() => document.getElementById("cue").classList.add("fade-play"), 1200);
+    setTimeout(() => document.querySelector(".sweep").classList.add("play"), 700);
+    setTimeout(() => document.getElementById("sub").classList.add("fade-play"), 850);
+    setTimeout(() => document.getElementById("cta").classList.add("fade-play"), 1000);
+    setTimeout(() => document.getElementById("cue").classList.add("fade-play"), 1300);
   };
 
+  let shock = null;
   const drawFrame = (t) => {
-    // sky: pre-dawn gradient waking up
-    const wake = seg(t, [0, TOTAL]);
-    const g = ctx.createLinearGradient(0, 0, 0, H);
-    g.addColorStop(0, `oklch(${0.10 + wake * 0.05} 0.015 200)`);
-    g.addColorStop(0.72, `oklch(${0.09 + wake * 0.04} 0.02 170)`);
-    g.addColorStop(1, `oklch(${0.12 + wake * 0.10} 0.045 130)`);
-    ctx.fillStyle = g;
+    if (hero.clientWidth !== W || hero.clientHeight !== H) resize();
+    ctx.fillStyle = "#05080a";
     ctx.fillRect(0, 0, W, H);
 
-    // city dots twinkle in radially from centre-right (where the crews live)
-    const gi = easeOut(seg(t, T.gridIn));
-    const origin = px(N(0.7, 0.5));
-    const maxD = Math.hypot(W, H);
-    dots.forEach((d) => {
-      const p = { x: d.x * W, y: d.y * H };
-      const dist = Math.hypot(p.x - origin.x, p.y - origin.y) / maxD;
-      if (dist > gi) return;
-      const tw = 0.35 + 0.65 * Math.abs(Math.sin(t * 2 + d.tw * 12));
-      ctx.fillStyle = `oklch(0.72 0.02 165 / ${0.16 * tw})`;
-      ctx.beginPath(); ctx.arc(p.x, p.y, d.r, 0, 7); ctx.fill();
-    });
+    const beamsOn = seg(t, T_BEAMS[0], T_BEAMS[0] + 0.4);
 
-    // clock
-    const ci = seg(t, T.clockIn);
-    clock.style.opacity = ci;
-    // clock time: 05:55 → 06:30 during leg1, → 07:55 during leg2
-    const l1 = seg(t, T.leg1), l2 = seg(t, T.leg2);
-    let mins = 355;
-    if (l1 > 0) mins = 355 + easeInOut(l1) * 35;         // 05:55→06:30
-    if (l2 > 0) mins = 390 + easeInOut(l2) * 85;         // 06:30→07:55
-    clock.firstChild.textContent = fmtClock(mins);
-
-    // trails fade slightly each frame, then freeze at the burst so the
-    // route map stays as a memory behind the headline
-    if (t < T.burst[0]) {
-      tctx.fillStyle = "rgba(7,11,9,0.045)";
-      tctx.fillRect(0, 0, W, H);
-    }
-
-    const comet = (pos, brightness = 1) => {
-      tctx.globalCompositeOperation = "lighter";
-      const r = 10 * brightness;
-      const rg = tctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, r * 3.2);
-      rg.addColorStop(0, `oklch(0.95 0.05 165 / ${0.9 * brightness})`);
-      rg.addColorStop(0.35, `oklch(0.74 0.11 165 / ${0.5 * brightness})`);
-      rg.addColorStop(1, "transparent");
-      tctx.fillStyle = rg;
-      tctx.beginPath(); tctx.arc(pos.x, pos.y, r * 3.2, 0, 7); tctx.fill();
-      tctx.globalCompositeOperation = "source-over";
-    };
-
-    // leg 1: homes → pickups
-    CARS.forEach((c, i) => {
-      const tt = clamp01(easeInOut(l1) * 1.15 - i * 0.06);
-      if (tt <= 0 || l1 <= 0) return;
-      const a = px(c.from), b = px(c.via);
-      const pos = bez(a, ctrl(a, b, 0.25, i % 2 ? 1 : -1), b, clamp01(tt));
-      comet(pos, 1);
-    });
-
-    // leg 2: pickups → merge → venue (two-stage bezier chain)
-    if (l2 > 0) {
-      CARS.forEach((c, i) => {
-        const tt = clamp01(easeInOut(l2) * 1.12 - i * 0.05);
-        if (tt <= 0) return;
-        const a = px(c.via), m = px(MERGE), v = px(VENUE.p);
-        let pos;
-        if (tt < 0.45) pos = bez(a, ctrl(a, m, 0.2, i % 2 ? -1 : 1), m, tt / 0.45);
-        else pos = bez(m, ctrl(m, v, 0.16, 1), v, (tt - 0.45) / 0.55);
-        comet(pos, 1.15);
-      });
-    }
-
-    // stamp trails onto main canvas
-    ctx.drawImage(trail, 0, 0, W, H);
-
-    // after the burst, stroke the whole route map crisply so it survives
-    if (t >= T.burst[0]) {
-      const routeAlpha = 0.35 * clamp01((t - T.burst[0]) / 0.4);
-      ctx.strokeStyle = `oklch(0.74 0.11 165 / ${routeAlpha})`;
-      ctx.lineWidth = 1.6;
-      const strokeBez = (a, c, b) => {
+    // spotlight beams (additive volumetric triangles)
+    if (t >= T_BEAMS[0]) {
+      ctx.globalCompositeOperation = "lighter";
+      BEAMS.forEach((b) => {
+        const life = seg(t, T_BEAMS[0] + b.phase * 0.3, T_BEAMS[0] + b.phase * 0.3 + 0.5);
+        if (life <= 0) return;
+        const conv = seg(t, T_DROP - 0.8, T_DROP);
+        const ox = b.px * W, oy = -30;
+        const target = { x: W * 0.5, y: H * 0.6 };
+        const sweepAngle = Math.PI / 2 + Math.sin(t * 1.1 + b.phase * 2.1) * 0.7;
+        const convAngle = Math.atan2(target.y - oy, target.x - ox);
+        const baseAngle = sweepAngle * (1 - conv) + convAngle * conv;
+        const len = H * 1.4;
+        const half = 0.10 + 0.05 * (1 - conv);
+        const a1 = baseAngle - half, a2 = baseAngle + half;
+        const p1 = { x: ox + Math.cos(a1) * len, y: oy + Math.sin(a1) * len };
+        const p2 = { x: ox + Math.cos(a2) * len, y: oy + Math.sin(a2) * len };
+        const g = ctx.createLinearGradient(ox, oy, (p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
+        g.addColorStop(0, `oklch(0.9 0.05 165 / ${0.35 * life})`);
+        g.addColorStop(1, "transparent");
+        ctx.fillStyle = g;
         ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.quadraticCurveTo(c.x, c.y, b.x, b.y);
-        ctx.stroke();
-      };
-      CARS.forEach((c, i) => {
-        const a = px(c.from), v1 = px(c.via), m = px(MERGE), v = px(VENUE.p);
-        strokeBez(a, ctrl(a, v1, 0.25, i % 2 ? 1 : -1), v1);
-        strokeBez(v1, ctrl(v1, m, 0.2, i % 2 ? -1 : 1), m);
+        ctx.moveTo(ox, oy); ctx.lineTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y);
+        ctx.closePath(); ctx.fill();
       });
-      const m = px(MERGE), v = px(VENUE.p);
-      ctx.lineWidth = 2.4;
-      strokeBez(m, ctrl(m, v, 0.16, 1), v);
+      ctx.globalCompositeOperation = "source-over";
     }
 
-    // pickup markers + labels
-    const li = seg(t, T.labels);
-    PICKUPS.forEach((pk, i) => {
-      const p = px(pk.p);
-      const on = clamp01(li * 3 - i * 0.6);
-      if (on <= 0) return;
-      ctx.strokeStyle = `oklch(0.74 0.11 165 / ${0.85 * on})`;
-      ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.arc(p.x, p.y, 6 + (1 - on) * 10, 0, 7); ctx.stroke();
-      ctx.fillStyle = `oklch(0.95 0.02 165 / ${on})`;
-      ctx.beginPath(); ctx.arc(p.x, p.y, 2.6, 0, 7); ctx.fill();
-      ctx.font = "600 11px Barlow, sans-serif";
-      const onRight = pk.p.x > 0.62;
-      ctx.textAlign = onRight ? "right" : "left";
-      ctx.fillStyle = `oklch(0.85 0.03 165 / ${0.9 * on})`;
-      ctx.fillText(`${pk.t}  ${pk.label}`, onRight ? p.x - 14 : p.x + 12, p.y + 4);
+    // crowd silhouette
+    ctx.fillStyle = "oklch(0.15 0.015 200)";
+    crowd.forEach((c) => {
+      ctx.beginPath();
+      ctx.arc(c.x * W, c.y * H, c.r, Math.PI, 0);
+      ctx.fill();
     });
-
-    // venue marker appears with leg 2
-    if (l2 > 0.15) {
-      const v = px(VENUE.p);
-      const on = clamp01((l2 - 0.15) * 2.2);
-      ctx.strokeStyle = `oklch(0.9 0.02 165 / ${on})`;
-      ctx.lineWidth = 2;
-      ctx.strokeRect(v.x - 7, v.y - 7, 14, 14);
-      ctx.font = "700 12px Barlow, sans-serif";
-      ctx.textAlign = "left";
-      ctx.fillStyle = `oklch(0.95 0.01 165 / ${on})`;
-      ctx.fillText(VENUE.label, v.x - 6, v.y + 28);
+    // phone-light glints in the crowd
+    if (beamsOn > 0) {
+      crowd.forEach((c) => {
+        const tw = Math.abs(Math.sin(t * 3 + c.tw * 20));
+        if (tw > 0.93) {
+          ctx.fillStyle = `oklch(0.85 0.05 165 / ${0.5 * beamsOn})`;
+          ctx.beginPath(); ctx.arc(c.x * W + c.r * 0.3, c.y * H - c.r * 0.75, 1.4, 0, 7); ctx.fill();
+        }
+      });
     }
 
-    // the burst: light floods from the venue and hands over to type
-    const bu = seg(t, T.burst);
-    if (bu > 0) {
-      const v = px(VENUE.p);
-      const R = easeOut(bu) * maxD * 1.1;
-      const rg = ctx.createRadialGradient(v.x, v.y, 0, v.x, v.y, R);
-      rg.addColorStop(0, `oklch(0.74 0.11 165 / ${0.5 * (1 - bu)})`);
-      rg.addColorStop(0.6, `oklch(0.53 0.115 165 / ${0.28 * (1 - bu)})`);
-      rg.addColorStop(1, "transparent");
-      ctx.fillStyle = rg;
+    // pyro
+    if (t >= T_PYRO[0] && t <= T_PYRO[1]) spawnSparks(18);
+    ctx.globalCompositeOperation = "lighter";
+    ctx.lineCap = "round";
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      const s = sparks[i];
+      s.x += s.vx; s.y += s.vy; s.vy += 0.16 * (H / 900); s.life -= s.decay;
+      if (s.life <= 0) { sparks.splice(i, 1); continue; }
+      ctx.strokeStyle = s.w ? `oklch(0.97 0.03 120 / ${s.life})` : `oklch(0.85 0.12 150 / ${s.life * 0.85})`;
+      ctx.lineWidth = 0.9 + s.life * 1.2;
+      ctx.beginPath();
+      ctx.moveTo(s.x - s.vx * 2.4, s.y - s.vy * 2.4);
+      ctx.lineTo(s.x, s.y);
+      ctx.stroke();
+    }
+    ctx.globalCompositeOperation = "source-over";
+
+    // the drop: shockwave + flash, hand over to the type
+    if (t >= T_DROP && !shock) shock = { t0: t };
+    if (shock) {
+      const st = clamp01((t - shock.t0) / 0.7);
+      const R = easeOut(st) * Math.hypot(W, H) * 0.75;
+      ctx.strokeStyle = `oklch(0.85 0.1 165 / ${0.5 * (1 - st)})`;
+      ctx.lineWidth = 3 + 14 * (1 - st);
+      ctx.beginPath(); ctx.arc(W * 0.5, H * 0.55, R, 0, 7); ctx.stroke();
+      const fl = ctx.createRadialGradient(W * 0.5, H * 0.55, 0, W * 0.5, H * 0.55, R + 60);
+      fl.addColorStop(0, `oklch(0.95 0.04 165 / ${0.22 * (1 - st)})`);
+      fl.addColorStop(1, "transparent");
+      ctx.fillStyle = fl;
       ctx.fillRect(0, 0, W, H);
-      if (bu > 0.25) deliverType();
     }
+    if (t >= T_TYPE) deliverType();
   };
 
-  // main loop
   let start = null, done = false;
-  const finish = () => {
+  const finishNow = () => {
+    if (done) return;
     done = true;
-    drawFrame(TOTAL);
+    canvas.classList.add("gone");
+    document.getElementById("skip").classList.add("gone");
     deliverType();
   };
   const loop = (ts) => {
     if (done) return;
     if (start === null) start = ts;
     const t = (ts - start) / 1000;
-    drawFrame(Math.min(t, TOTAL));
-    if (t >= TOTAL) { done = true; return; }
+    drawFrame(t);
+    if (t >= T_FADE) canvas.classList.add("gone");
+    if (t >= TOTAL) { finishNow(); return; }
     requestAnimationFrame(loop);
   };
 
-  document.getElementById("skip").addEventListener("click", finish);
-  if (reduced) finish();
-  else requestAnimationFrame(loop);
+  document.getElementById("skip").addEventListener("click", finishNow);
+  const HOLD = new URLSearchParams(location.search).has("hold"); // testing: freeze for manual __seek
+  if (reduced) finishNow();
+  else if (!HOLD) requestAnimationFrame(loop);
 
-  // test hook: force-render any second of the intro
-  window.__seek = (t) => { done = true; drawFrame(clamp01(t / TOTAL) * TOTAL); if (t >= TOTAL * 0.8) deliverType(); };
+  // test hooks
+  window.__seek = (t) => { drawFrame(t); if (t >= T_TYPE) deliverType(); if (t >= T_FADE) canvas.classList.add("gone"); };
+  window.__finish = finishNow;
 })();
 
 /* =========================================================
-   ACT II — the scroll sunrise. Scroll scrubs 05:55 → 08:00:
-   sky lightens, a sun rises, the van runs the route and the
-   pickups light as it passes.
+   Scroll handoff: the hero pins for one screen of scroll;
+   the photo eases forward, the copy drifts up, the normal
+   page arrives. Nothing else on the page changes.
    ========================================================= */
 (() => {
-  const canvas = document.getElementById("dawn");
-  const ctx = canvas.getContext("2d");
-  const journey = document.getElementById("journey");
-  const bigtime = document.getElementById("bigtime");
-  const caps = [...document.querySelectorAll(".stage .cap")];
+  const wrap = document.getElementById("heroWrap");
+  const photo = document.getElementById("photo");
+  const inner = document.getElementById("heroInner");
+  const cue = document.getElementById("cue");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const DPR = Math.min(devicePixelRatio || 1, 2);
-  let W = 0, H = 0;
-  const resize = () => {
-    W = canvas.clientWidth; H = canvas.clientHeight;
-    canvas.width = W * DPR; canvas.height = H * DPR;
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  };
-  resize();
-  addEventListener("resize", resize);
-
   const clamp01 = (v) => Math.max(0, Math.min(1, v));
-  const lerp = (a, b, t) => a + (b - a) * t;
-  const easeInOut = (t) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 
-  // Route across the stage (gentle S)
-  const route = (u) => {
-    const x = lerp(0.06, 0.94, u) * W;
-    const y = (0.62 + Math.sin(u * Math.PI * 1.15 + 0.3) * 0.10) * H;
-    return { x, y };
+  const apply = (p) => {
+    const e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+    photo.style.transform = `scale(${1 + e * 0.14})`;
+    inner.style.transform = `translateY(${-e * 9}vh)`;
+    inner.style.opacity = String(1 - clamp01((p - 0.35) / 0.5));
+    cue.style.opacity = String(Math.max(0, 0.9 - p * 3));
   };
-  const STOPS = [
-    { u: 0.22, label: "TESCO HAMILTON", t: "06:30" },
-    { u: 0.52, label: "LIDL ST GEORGE'S", t: "06:50" },
-    { u: 0.88, label: "DONINGTON GATE", t: "07:55" },
-  ];
-
-  const fmtClock = (mins) => {
-    const h = Math.floor(mins / 60), m = Math.round(mins % 60);
-    return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
-  };
-
-  const draw = (p) => {
-    const e = easeInOut(p);
-    // sky: night → morning
-    const top = { l: lerp(0.10, 0.88, e), c: lerp(0.02, 0.03, e), h: lerp(200, 190, e) };
-    const bot = { l: lerp(0.12, 0.97, e), c: lerp(0.04, 0.015, e), h: lerp(140, 150, e) };
-    const g = ctx.createLinearGradient(0, 0, 0, H);
-    g.addColorStop(0, `oklch(${top.l} ${top.c} ${top.h})`);
-    g.addColorStop(1, `oklch(${bot.l} ${bot.c} ${bot.h})`);
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, W, H);
-
-    // rising sun (soft white-green glow)
-    const sx = lerp(0.15, 0.78, e) * W;
-    const sy = lerp(1.05, 0.24, e) * H;
-    const sr = lerp(40, 130, e);
-    const srg = ctx.createRadialGradient(sx, sy, 0, sx, sy, sr * 3);
-    srg.addColorStop(0, `oklch(0.98 0.02 120 / ${lerp(0.25, 0.95, e)})`);
-    srg.addColorStop(0.4, `oklch(0.9 0.05 140 / ${lerp(0.12, 0.35, e)})`);
-    srg.addColorStop(1, "transparent");
-    ctx.fillStyle = srg;
-    ctx.beginPath(); ctx.arc(sx, sy, sr * 3, 0, 7); ctx.fill();
-
-    // route line: draws with progress
-    ctx.lineWidth = 2;
-    ctx.setLineDash([6, 8]);
-    ctx.strokeStyle = e > 0.55 ? "oklch(0.35 0.06 168 / 0.8)" : "oklch(0.8 0.05 165 / 0.6)";
-    ctx.beginPath();
-    const steps = 90;
-    for (let i = 0; i <= steps * Math.min(1, p * 1.15); i++) {
-      const pt = route(i / steps);
-      i === 0 ? ctx.moveTo(pt.x, pt.y) : ctx.lineTo(pt.x, pt.y);
-    }
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    // stops light up as the van passes
-    STOPS.forEach((s) => {
-      const pt = route(s.u);
-      const lit = p >= s.u;
-      ctx.fillStyle = lit ? "oklch(0.53 0.115 165)" : "oklch(0.6 0.02 165 / 0.5)";
-      ctx.beginPath(); ctx.arc(pt.x, pt.y, lit ? 7 : 5, 0, 7); ctx.fill();
-      if (lit) {
-        ctx.strokeStyle = "oklch(0.53 0.115 165 / 0.35)";
-        ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.arc(pt.x, pt.y, 13, 0, 7); ctx.stroke();
-      }
-      ctx.font = "600 12px Barlow, sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillStyle = e > 0.55 ? `oklch(0.3 0.02 168 / ${lit ? 1 : 0.55})` : `oklch(0.9 0.02 165 / ${lit ? 1 : 0.55})`;
-      const above = STOPS.indexOf(s) % 2 === 0;
-      const lx = Math.max(70, Math.min(W - 70, pt.x));
-      ctx.fillText(s.t + " · " + s.label, lx, above ? pt.y - 20 : pt.y + 34);
-    });
-
-    // the van: a bright comet with a headlight beam
-    const vp = route(clamp01(p * 1.02));
-    const ahead = route(clamp01(p * 1.02 + 0.02));
-    const ang = Math.atan2(ahead.y - vp.y, ahead.x - vp.x);
-    // beam
-    ctx.save();
-    ctx.translate(vp.x, vp.y);
-    ctx.rotate(ang);
-    const beam = ctx.createLinearGradient(0, 0, 150, 0);
-    beam.addColorStop(0, "oklch(0.95 0.04 120 / 0.5)");
-    beam.addColorStop(1, "transparent");
-    ctx.fillStyle = beam;
-    ctx.beginPath();
-    ctx.moveTo(6, 0); ctx.lineTo(150, -26); ctx.lineTo(150, 26); ctx.closePath();
-    ctx.fill();
-    ctx.restore();
-    // body glow
-    const vg = ctx.createRadialGradient(vp.x, vp.y, 0, vp.x, vp.y, 26);
-    vg.addColorStop(0, "oklch(0.98 0.03 165)");
-    vg.addColorStop(0.4, "oklch(0.74 0.11 165 / 0.7)");
-    vg.addColorStop(1, "transparent");
-    ctx.fillStyle = vg;
-    ctx.beginPath(); ctx.arc(vp.x, vp.y, 26, 0, 7); ctx.fill();
-    ctx.fillStyle = "oklch(0.2 0.02 168)";
-    ctx.beginPath(); ctx.arc(vp.x, vp.y, 5, 0, 7); ctx.fill();
-
-    // big time + captions
-    const mins = lerp(355, 480, e); // 05:55 → 08:00
-    bigtime.firstChild.textContent = fmtClock(mins);
-    const segIdx = p < 0.2 ? 0 : p < 0.5 ? 1 : p < 0.82 ? 2 : 3;
-    caps.forEach((c, i) => c.classList.toggle("on", i === segIdx));
-  };
-
-  let progress = 0;
+  if (reduced) return;
   const update = () => {
-    const rect = journey.getBoundingClientRect();
-    const total = rect.height - innerHeight;
-    progress = clamp01(-rect.top / total);
-    draw(progress);
+    const r = wrap.getBoundingClientRect();
+    const total = r.height - innerHeight;
+    apply(clamp01(-r.top / total));
   };
-  if (reduced) {
-    draw(1);
-  } else {
-    addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
-    update();
-  }
-  // test hook
-  window.__scrollSeek = (p) => draw(clamp01(p));
+  addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
+  update();
+  window.__scrollSeek = apply;
 })();
 </script>
 </body>
