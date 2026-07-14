@@ -1,4 +1,31 @@
-// MJ Recruitment — marketing page interactions (progressive enhancement)
+// MJ Recruit — marketing page interactions (progressive enhancement)
+
+// MJ's listed WhatsApp number (from their Facebook page). Form submissions
+// offer a one-tap WhatsApp handoff with the details pre-written.
+// When MJ signs off, forms can ALSO post to an email service; drop the
+// endpoint in here and add a fetch() in the submit handler:
+// const FORM_ENDPOINT = "https://formspree.io/f/XXXXXX";
+const WA_NUMBER = "447703459547";
+
+// Turn a filled form into a readable WhatsApp message
+function formToMessage(form) {
+  const intro = form.id === "crew-form"
+    ? "Hi MJ, I'd like to join the crew."
+    : "Hi MJ, staff enquiry from the website.";
+  const parts = [intro];
+  form.querySelectorAll(".field").forEach((field) => {
+    const label = (field.querySelector("label")?.textContent || "").replace(/\(.*?\)/g, "").replace(/\?$/, "").trim();
+    const chips = field.querySelectorAll('.chip[aria-pressed="true"]');
+    const seg = field.querySelector('.seg [aria-pressed="true"]');
+    const input = field.querySelector("input, textarea");
+    let value = "";
+    if (chips.length) value = [...chips].map((c) => c.textContent.trim()).join(", ");
+    else if (seg) value = seg.textContent.trim();
+    else if (input) value = input.value.trim();
+    if (label && value) parts.push(`${label}: ${value}`);
+  });
+  return parts.join("\n");
+}
 
 // Chip toggles. data-single groups behave like radios.
 document.querySelectorAll(".chips").forEach((group) => {
@@ -39,7 +66,11 @@ document.querySelectorAll("form").forEach((form) => {
     if (firstBad) { firstBad.focus(); return; }
     form.classList.add("submitted");
     const success = form.nextElementSibling;
-    if (success) success.scrollIntoView({ block: "center", behavior: "smooth" });
+    if (success) {
+      const wa = success.querySelector(".wa-send");
+      if (wa) wa.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(formToMessage(form))}`;
+      success.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
   });
   form.addEventListener("input", (e) => {
     if (e.target.matches("input") && e.target.value.trim()) {

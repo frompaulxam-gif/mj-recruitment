@@ -1,5 +1,11 @@
 /* MJ Recruit — design tokens + shared styles
-   Colorway: green, white, black (matches the real MJ Recruit logo). */
+   Colorway: green, white, black (matches the real MJ Recruit logo).
+
+   BRAND GREEN: current values are matched by eye to the logo image.
+   When the official logo file arrives, swap the four --brand* values below.
+   The logo's "HOSPITALITY SPECIALISTS" tag samples close to a soft teal
+   (roughly oklch(0.73 0.06 205)); the site uses a deeper green for
+   contrast-safe buttons. Only these four lines need to change. */
 
 :root {
   --bg:         oklch(1 0 0);

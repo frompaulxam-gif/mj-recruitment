@@ -195,6 +195,43 @@
 .band-brand .form-card { border-color: transparent; box-shadow: 0 24px 60px -30px oklch(0 0 0 / 0.5); }
 
 
+/* ---------- Quotes ---------- */
+.quotes {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  margin-top: 30px;
+}
+.quotes .q {
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 26px 24px 22px;
+  font-size: 1.06rem;
+  line-height: 1.5;
+}
+.quotes .q::before {
+  content: "“";
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.6rem;
+  line-height: 0.6;
+  color: var(--brand);
+  margin-bottom: 10px;
+}
+.quotes .q footer {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.quotes-note {
+  margin-top: 14px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
 /* ---------- Two doors (Are you a...) ---------- */
 .doors { display: grid; grid-template-columns: 1fr; }
 @media (min-width: 760px) { .doors { grid-template-columns: 1fr 1fr; } }
