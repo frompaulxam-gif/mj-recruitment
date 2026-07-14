@@ -35,20 +35,28 @@
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
-  background: var(--tarmac);
+  background: oklch(0.32 0.075 168);
   color: var(--on-dark);
   overflow: hidden;
 }
 .hero .photo {
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(75deg, oklch(0.13 0 0 / 0.96) 0%, oklch(0.13 0 0 / 0.82) 42%, oklch(0.13 0 0 / 0.32) 100%),
-    var(--hero-img);
+  z-index: 0;
+  background-image: var(--hero-img);
   background-size: cover;
   background-position: center 30%;
   filter: grayscale(1) contrast(1.05);
 }
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(75deg, oklch(0.30 0.075 168 / 0.97) 0%, oklch(0.30 0.075 168 / 0.86) 42%, oklch(0.30 0.075 168 / 0.45) 100%);
+}
+.hero .inner { z-index: 2; }
+.hero .sub { color: oklch(0.90 0.02 165); }
 .hero .inner {
   position: relative;
   max-width: 1180px;
@@ -93,12 +101,11 @@
 
 /* Venue ticker */
 .venues {
-  background: var(--tarmac);
-  color: var(--on-dark);
+  background: var(--brand-soft);
   padding: 16px 0;
   overflow: hidden;
 }
-.venues .row span { color: var(--brand-bright); }
+.venues .row span { color: var(--brand-deep); }
 .venues .row {
   display: flex;
   flex-wrap: wrap;
@@ -207,8 +214,10 @@
 .door h2 { font-size: clamp(2rem, 4.5vw, 2.9rem); margin-bottom: 10px; }
 .door p { margin-bottom: 16px; max-width: 44ch; font-size: 1.02rem; opacity: 0.9; }
 .door .go { font-weight: 600; font-size: 1.05rem; }
-.door-dark { background: var(--tarmac); color: var(--on-dark); }
-.door-dark .go { color: var(--brand-bright); }
+.door-dark { background: var(--bg); color: var(--ink); border-bottom: 1px solid var(--line); }
+.door-dark small { color: var(--muted); }
+.door-dark p { color: var(--muted); }
+.door-dark .go { color: var(--brand-deep); }
 .door-green { background: var(--brand); color: #fff; }
 .door-green .go { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
 
