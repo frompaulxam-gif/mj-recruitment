@@ -92,7 +92,7 @@ function logShifts() {
   const ids = [];
   state.built.cars.forEach((car) => {
     ids.push(car.driver.id);
-    car.stops.forEach((st) => st.pax.forEach((px) => ids.push(px.id)));
+    (car.pax || car.stops.flatMap((st) => st.pax)).forEach((px) => ids.push(px.id));
   });
   state.dates.forEach((d) => {
     const set = new Set(shiftLog[d] || []);
@@ -113,6 +113,7 @@ const state = {
   customVenue: saved?.customVenue ?? "",
   time: saved?.time ?? "08:00",
   dates: saved?.dates ?? (saved?.date ? [saved.date] : [nextSaturday()]),
+  pickupStyle: saved?.pickupStyle ?? "points",
   extraStops: new Set(saved?.extraStops ?? []),
   mode: "pickup",
   regroup: true,
@@ -124,6 +125,7 @@ function persist() {
     sel: [...state.sel], drv: [...state.drv],
     venueId: state.venueId, customVenue: state.customVenue,
     time: state.time, dates: state.dates,
+    pickupStyle: state.pickupStyle,
     extraStops: [...state.extraStops],
   });
 }
@@ -197,6 +199,8 @@ function buildPickups() {
   const drivers = selected.filter((p) => state.drv.has(p.id) && p.car);
   const passengers = selected.filter((p) => !drivers.includes(p));
 
+  if (state.pickupStyle === "homes") return buildHomePickups(drivers, passengers);
+
   const activePoints = POINTS.filter((pt) => pt.core || state.extraStops.has(pt.id));
   const warnings = [];
   const suggestions = [];
@@ -250,19 +254,23 @@ function buildPickups() {
   const unseated = [];
   const carLoad = (c) => c.stops.reduce((n, s) => n + s.pax.length, 0);
 
-  // Phase 1: hand cars to the biggest remaining group, nearest free driver first
+  // Phase 1: biggest remaining group first; when groups tie on size, the
+  // (group, driver) pair with the shortest home-to-stop drive wins, so a
+  // Hamilton driver gets the Hamilton stop, not a same-sized one across town.
   const groupsLeft = groups.map((g) => ({ point: g.point, queue: [...g.pax] }));
   while (pool.length) {
-    groupsLeft.sort((a, b) => b.queue.length - a.queue.length);
-    const g = groupsLeft[0];
-    if (!g || !g.queue.length) break;
-    let di = -1, dBest = Infinity;
-    pool.forEach((d, i) => {
-      const dd = miles(d, g.point);
-      if (dd < dBest) { dBest = dd; di = i; }
+    const live = groupsLeft.filter((g) => g.queue.length);
+    if (!live.length) break;
+    const most = Math.max(...live.map((g) => g.queue.length));
+    let best = null;
+    live.filter((g) => g.queue.length === most).forEach((g) => {
+      pool.forEach((d, i) => {
+        const dd = miles(d, g.point);
+        if (!best || dd < best.dd) best = { g, i, dd };
+      });
     });
-    const driver = pool.splice(di, 1)[0];
-    cars.push({ driver, stops: [{ point: g.point, pax: g.queue.splice(0, CAP) }] });
+    const driver = pool.splice(best.i, 1)[0];
+    cars.push({ driver, stops: [{ point: best.g.point, pax: best.g.queue.splice(0, CAP) }] });
   }
 
   // Phase 2: every leftover gets ANY spare seat — a filled seat beats a tidy route.
@@ -317,6 +325,55 @@ function buildPickups() {
   return { cars, warnings, suggestions, unseated, passengers, drivers };
 }
 
+/* ---------------- Build: home pickups ---------------- */
+
+function buildHomePickups(drivers, passengers) {
+  const warnings = [];
+  const unseated = [];
+  if (venue().fixedTravel) {
+    warnings.push({ kind: "info", text: `Times for ${venue().name} assume about a 45 minute drive. Nudge each stop with − and + if it's nearer or further.` });
+  }
+  const pool = drivers.map((d) => ({ ...d, pax: [] }));
+  passengers.forEach((p) => {
+    p._flag = null;
+    let best = null, bd = Infinity;
+    pool.forEach((d) => {
+      if (d.pax.length >= CAP) return;
+      const dd = miles(p, d);
+      if (dd < bd) { bd = dd; best = d; }
+    });
+    if (best) best.pax.push(p); else unseated.push(p);
+  });
+  const [sh, sm] = state.time.split(":").map(Number);
+  const shiftMin = sh * 60 + sm;
+  const cars = pool.filter((d) => d.pax.length).map((d) => {
+    const route = [];
+    let here = d;
+    const left = [...d.pax];
+    while (left.length) {
+      let bi = 0, bd = Infinity;
+      left.forEach((p, i) => { const dd = miles(here, p); if (dd < bd) { bd = dd; bi = i; } });
+      here = left.splice(bi, 1)[0];
+      route.push(here);
+    }
+    let t = shiftMin - ARRIVE_EARLY - travelToVenue(route[route.length - 1]);
+    const times = new Array(route.length);
+    for (let i = route.length - 1; i >= 0; i--) {
+      times[i] = floor5(t);
+      if (i > 0) t -= travelMin(route[i - 1], route[i]) + 3;
+    }
+    return { driver: d, pax: route, stops: route.map((pp, i) => ({ home: pp, time: times[i] })) };
+  });
+  if (unseated.length) {
+    warnings.push({ kind: "problem", text: `${unseated.map((p) => p.name).join(", ")} ${unseated.length > 1 ? "have" : "has"} no seat. Switch on another driver or tick someone with a car.` });
+  }
+  const spare = pool.filter((d) => !d.pax.length).map((d) => d.name);
+  if (spare.length) {
+    warnings.push({ kind: "info", text: `Spare driver${spare.length > 1 ? "s" : ""} not needed today: ${spare.join(", ")}.` });
+  }
+  return { cars, warnings, suggestions: [], unseated, passengers, drivers, homes: true };
+}
+
 /* ---------------- Build: drop-offs ---------------- */
 
 function buildDropoffs(pickup) {
@@ -337,7 +394,7 @@ function buildDropoffs(pickup) {
     });
     cars = pool.filter((d) => d.pax.length).map((d) => ({ driver: d, pax: d.pax }));
   } else {
-    cars = pickup.cars.map((c) => ({ driver: c.driver, pax: c.stops.flatMap((s) => s.pax) }));
+    cars = pickup.cars.map((c) => ({ driver: c.driver, pax: c.pax ? [...c.pax] : c.stops.flatMap((s) => s.pax) }));
   }
   // Order stops: nearest-neighbour from the venue, driver's own home last
   cars.forEach((car) => {
@@ -365,9 +422,14 @@ const fmt1 = (n) => (Math.round(n * 10) / 10).toFixed(1);
 function pickupMessage(built) {
   const lines = [`Hi all please find below pick up and times for ${venue().name} ${fmtDates()}`, ""];
   built.cars.forEach((car) => {
-    const bits = car.stops.map((s, i) =>
-      `${i > 0 ? "then onto " : ""}${s.point.msg} ${fmtTime(s.time)} ${s.pax.map((p) => "@" + p.tag).join(" ")}`);
-    lines.push(`@${car.driver.tag} driver ${bits.join(" ")}`, "");
+    if (built.homes) {
+      const bits = car.stops.map((s) => `${fmtTime(s.time)} @${s.home.tag}`).join(" then ");
+      lines.push(`@${car.driver.tag} driver picking up from home ${bits}`, "");
+    } else {
+      const bits = car.stops.map((s, i) =>
+        `${i > 0 ? "then onto " : ""}${s.point.msg} ${fmtTime(s.time)} ${s.pax.map((p) => "@" + p.tag).join(" ")}`);
+      lines.push(`@${car.driver.tag} driver ${bits.join(" ")}`, "");
+    }
   });
   lines.push("Could you all please confirm 👍 asap please.");
   return lines.join("\n");
@@ -417,7 +479,7 @@ function renderCrew() {
   const q = ($("#crew-search").value || "").toLowerCase();
   const list = $("#crew-list");
   list.innerHTML = "";
-  STAFF().forEach((p) => {
+  STAFF().slice().sort((a, b) => a.name.localeCompare(b.name)).forEach((p) => {
     if (q && !p.name.toLowerCase().includes(q) && !p.area.toLowerCase().includes(q)) return;
     const on = state.sel.has(p.id);
     const row = document.createElement("button");
@@ -425,7 +487,6 @@ function renderCrew() {
     row.setAttribute("aria-pressed", String(on));
     const custom = String(p.id).startsWith("c_");
     row.innerHTML = `
-      <span class="avatar" aria-hidden="true">${initials(p.name)}</span>
       <span class="who">
         <span class="nm">${esc(p.name)} ${p.car ? '<span class="badge-car">DRIVER 🚗</span>' : ""}</span>
         <span class="ar">${esc(p.area)} · ${shiftsOf(p)} shift${shiftsOf(p) === 1 ? "" : "s"}${custom ? " · added by you" : ""}</span>
@@ -555,7 +616,7 @@ function renderResults() {
     });
 
     built.cars.forEach((car, ci) => {
-      const load = car.stops.reduce((n, s) => n + s.pax.length, 0);
+      const load = car.pax ? car.pax.length : car.stops.reduce((n, s) => n + s.pax.length, 0);
       const el = document.createElement("div");
       el.className = "car";
       el.innerHTML = `
@@ -566,17 +627,21 @@ function renderResults() {
       car.stops.forEach((stop, si) => {
         const sb = document.createElement("div");
         sb.className = "stop-block";
+        const place = stop.home ? `${esc(stop.home.name)}'s` : esc(stop.point.name);
+        const paxHtml = stop.home
+          ? `<span class="p">${esc(stop.home.name)} · ${esc(stop.home.area)}</span>`
+          : stop.pax.map((p) => `<span class="p">${esc(p.name)}${p._flag ? `<em class="det">${esc(p._flag)}</em>` : ""}</span>`).join("");
         sb.innerHTML = `
           <div class="stop-line">
-            ${si > 0 ? '<span class="then">then onto</span>' : ""}
+            ${si > 0 ? '<span class="then">then</span>' : ""}
             <span class="t">${fmtTime(stop.time)}</span>
-            <span>${esc(stop.point.name)}</span>
+            <span>${place}</span>
             <span class="tweak">
               <button type="button" aria-label="5 minutes earlier">−</button>
               <button type="button" aria-label="5 minutes later">+</button>
             </span>
           </div>
-          <div class="pax">${stop.pax.map((p) => `<span class="p">${esc(p.name)}${p._flag ? `<em class="det">${esc(p._flag)}</em>` : ""}</span>`).join("")}</div>`;
+          <div class="pax">${paxHtml}</div>`;
         const [minus, plus] = sb.querySelectorAll(".tweak button");
         minus.addEventListener("click", () => { stop.time -= 5; renderResults(); });
         plus.addEventListener("click", () => { stop.time += 5; renderResults(); });
@@ -822,6 +887,16 @@ $("#restore-file").addEventListener("change", (e) => {
   }).catch(() => {
     toast("That doesn't look like an MJ backup file");
     e.target.value = "";
+  });
+});
+
+document.querySelectorAll("#style-chips .chip").forEach((b) => {
+  b.setAttribute("aria-pressed", String(b.dataset.style === state.pickupStyle));
+  b.addEventListener("click", () => {
+    state.pickupStyle = b.dataset.style;
+    document.querySelectorAll("#style-chips .chip").forEach((c) => c.setAttribute("aria-pressed", String(c === b)));
+    persist();
+    rebuildIfBuilt();
   });
 });
 
