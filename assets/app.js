@@ -18,22 +18,21 @@ const AREAS = {
 
 // tag = how they're @-mentioned in the group
 const BASE_STAFF = [
-  { id: "nabay",    name: "Nabay",       tag: "Nabay",      area: "Hamilton",      lat: 52.6580, lng: -1.0500, car: true, shifts: 46 },
+  { id: "nabay",    name: "Nabay",       tag: "Nabay",      area: "Hamilton",      lat: 52.6580, lng: -1.0500, car: true, shifts: 46, house: "hollowtree" },
   { id: "paul",     name: "Paul",        tag: "Laup",       area: "Evington",      lat: 52.6280, lng: -1.0830, car: true, shifts: 41 },
   { id: "aaron",    name: "Aaron Dixon", tag: "~Aaron Dixon", area: "Evington",    lat: 52.6320, lng: -1.0700, car: true, shifts: 33 },
   { id: "shilzie",  name: "Shilzie",     tag: "~shilzie",   area: "Belgrave",      lat: 52.6560, lng: -1.1190, car: true, shifts: 38 },
   { id: "zed",      name: "Z",           tag: "~Z",         area: "Wigston",       lat: 52.5900, lng: -1.1010, car: true, shifts: 29 },
-  { id: "naod",     name: "Naod",        tag: "~Naod",      area: "Hamilton",      lat: 52.6580, lng: -1.0500, car: false, shifts: 22 },
-  { id: "siem",     name: "Siem",        tag: "~siem",      area: "Hamilton",      lat: 52.6580, lng: -1.0500, car: false, shifts: 21 },
-  { id: "zane",     name: "Zane",        tag: "~Zane",      area: "Wigston",       lat: 52.5850, lng: -1.0930, car: false, shifts: 12 },
-  { id: "kyan",     name: "Kyan",        tag: "~Kyan",      area: "Wigston",       lat: 52.5850, lng: -1.0930, car: false, shifts: 11 },
+  { id: "naod",     name: "Naod",        tag: "~Naod",      area: "Hamilton",      lat: 52.6580, lng: -1.0500, car: false, shifts: 22, house: "hollowtree" },
+  { id: "siem",     name: "Siem",        tag: "~siem",      area: "Hamilton",      lat: 52.6580, lng: -1.0500, car: false, shifts: 21, house: "hollowtree" },
+  { id: "zane",     name: "Zane",        tag: "~Zane",      area: "Wigston",       lat: 52.5850, lng: -1.0930, car: false, shifts: 12, house: "newton" },
+  { id: "kyan",     name: "Kyan",        tag: "~Kyan",      area: "Wigston",       lat: 52.5850, lng: -1.0930, car: false, shifts: 11, house: "newton" },
   { id: "zuri",     name: "Zuri",        tag: "Zuri",       area: "Wigston",       lat: 52.5860, lng: -1.1060, car: false, shifts: 17 },
   { id: "paige",    name: "Paige",       tag: "~Paige",     area: "Evington",      lat: 52.6260, lng: -1.0880, car: false, shifts: 15 },
   { id: "eleanor",  name: "Eleanor",     tag: "~Eleanor",   area: "Glenfield",     lat: 52.6490, lng: -1.2060, car: false, shifts: 8 },
   { id: "logan",    name: "Logan",       tag: "~Logan",     area: "Oadby",         lat: 52.5990, lng: -1.0800, car: false, shifts: 6 },
   { id: "ek",       name: "Ek",          tag: "~Ek",        area: "City centre",   lat: 52.6340, lng: -1.1150, car: false, shifts: 19 },
   { id: "kay",      name: "K",           tag: "~K",         area: "Wigston",       lat: 52.5880, lng: -1.0980, car: false, shifts: 9 },
-  { id: "ziggy",    name: "Ziggy",       tag: "~Ziggy",     area: "Wigston",       lat: 52.5920, lng: -1.1020, car: false, shifts: 13 },
   { id: "bright",   name: "Bright",      tag: "~Bright",    area: "Wigston",       lat: 52.6000, lng: -1.1150, car: false, shifts: 7 },
   { id: "rihanna",  name: "Rihanna",     tag: "~Rihanna",   area: "Belgrave",      lat: 52.6480, lng: -1.1200, car: false, shifts: 10 },
   { id: "zakaria",  name: "Zakaria",     tag: "~Zakaria",   area: "Highfields",    lat: 52.6270, lng: -1.1150, car: false, shifts: 14 },
@@ -102,6 +101,8 @@ function logShifts() {
   store.set("mj_shiftlog", shiftLog);
   renderCrew();
 }
+
+const houseOf = (p) => p.house || p.id;
 
 const DEMO_SELECTED = ["nabay","paul","zed","naod","siem","zane","kyan","zuri","paige","eleanor","logan","ek","zakaria"];
 
@@ -241,12 +242,29 @@ function buildPickups() {
     });
   }
 
-  // Group by point, biggest demand first
+  // Group by point, biggest demand first; households sit adjacent so they
+  // never get split across cars.
   const byPoint = new Map();
   passengers.forEach((p) => {
     if (!byPoint.has(p._pt.id)) byPoint.set(p._pt.id, { point: p._pt, pax: [] });
     byPoint.get(p._pt.id).pax.push(p);
   });
+  byPoint.forEach((g) => g.pax.sort((a, b) => String(houseOf(a)).localeCompare(String(houseOf(b)))));
+
+  // Take up to n seats from a queue without splitting a household unless forced
+  const takeSeats = (queue, n) => {
+    const taken = [];
+    while (queue.length && taken.length < n) {
+      const clusterOf = (p) => queue.filter((q) => houseOf(q) === houseOf(p));
+      let cluster = clusterOf(queue[0]);
+      if (taken.length + cluster.length > n) {
+        const alt = queue.find((p) => taken.length + clusterOf(p).length <= n);
+        cluster = alt ? clusterOf(alt) : [queue[0]]; // forced split as last resort
+      }
+      cluster.forEach((m) => { taken.push(m); queue.splice(queue.indexOf(m), 1); });
+    }
+    return taken;
+  };
   const groups = [...byPoint.values()].sort((a, b) => b.pax.length - a.pax.length);
 
   const pool = drivers.map((d) => ({ ...d }));
@@ -270,7 +288,7 @@ function buildPickups() {
       });
     });
     const driver = pool.splice(best.i, 1)[0];
-    cars.push({ driver, stops: [{ point: best.g.point, pax: best.g.queue.splice(0, CAP) }] });
+    cars.push({ driver, stops: [{ point: best.g.point, pax: takeSeats(best.g.queue, CAP) }] });
   }
 
   // Phase 2: every leftover gets ANY spare seat — a filled seat beats a tidy route.
@@ -333,38 +351,79 @@ function buildHomePickups(drivers, passengers) {
   if (venue().fixedTravel) {
     warnings.push({ kind: "info", text: `Times for ${venue().name} assume about a 45 minute drive. Nudge each stop with − and + if it's nearer or further.` });
   }
-  const pool = drivers.map((d) => ({ ...d, pax: [] }));
+  // Cluster passengers by household: one house, one stop, one car
+  const clusters = [];
+  const seen = new Set();
   passengers.forEach((p) => {
     p._flag = null;
+    const h = houseOf(p);
+    if (seen.has(h)) return;
+    seen.add(h);
+    const members = passengers.filter((q) => houseOf(q) === h);
+    clusters.push({ house: h, members, lat: p.lat, lng: p.lng });
+  });
+  const pool = drivers.map((d) => ({ ...d, pax: [], withMe: [], stopsRaw: [] }));
+  // Housemates of a driver ride with that driver from the off
+  for (let i = clusters.length - 1; i >= 0; i--) {
+    const c = clusters[i];
+    const host = pool.find((d) => houseOf(d) === c.house);
+    if (host && host.pax.length + c.members.length <= CAP) {
+      host.withMe.push(...c.members);
+      host.pax.push(...c.members);
+      clusters.splice(i, 1);
+    }
+  }
+  // Whole clusters to the nearest driver with room; split only when nothing fits
+  clusters.sort((a, b) => b.members.length - a.members.length);
+  clusters.forEach((c) => {
     let best = null, bd = Infinity;
     pool.forEach((d) => {
-      if (d.pax.length >= CAP) return;
-      const dd = miles(p, d);
+      if (d.pax.length + c.members.length > CAP) return;
+      const dd = miles(c, d);
       if (dd < bd) { bd = dd; best = d; }
     });
-    if (best) best.pax.push(p); else unseated.push(p);
+    if (best) {
+      best.pax.push(...c.members);
+      best.stopsRaw.push(c);
+      return;
+    }
+    c.members.forEach((p) => {
+      let b2 = null, bd2 = Infinity;
+      pool.forEach((d) => {
+        if (d.pax.length >= CAP) return;
+        const dd = miles(p, d);
+        if (dd < bd2) { bd2 = dd; b2 = d; }
+      });
+      if (b2) { b2.pax.push(p); b2.stopsRaw.push({ house: houseOf(p), members: [p], lat: p.lat, lng: p.lng }); }
+      else unseated.push(p);
+    });
   });
   const [sh, sm] = state.time.split(":").map(Number);
   const shiftMin = sh * 60 + sm;
   const cars = pool.filter((d) => d.pax.length).map((d) => {
     const route = [];
     let here = d;
-    const left = [...d.pax];
+    const left = [...d.stopsRaw];
     while (left.length) {
       let bi = 0, bd = Infinity;
-      left.forEach((p, i) => { const dd = miles(here, p); if (dd < bd) { bd = dd; bi = i; } });
+      left.forEach((c, i) => { const dd = miles(here, c); if (dd < bd) { bd = dd; bi = i; } });
       here = left.splice(bi, 1)[0];
       route.push(here);
     }
-    let t = shiftMin - ARRIVE_EARLY - travelToVenue(route[route.length - 1]);
     const times = new Array(route.length);
-    for (let i = route.length - 1; i >= 0; i--) {
-      // Keep each earlier home at least 5 min before the next, so neighbours
-      // don't both get stamped the same time.
-      times[i] = i === route.length - 1 ? floor5(t) : Math.min(floor5(t), times[i + 1] - 5);
-      if (i > 0) t = times[i] - (travelMin(route[i - 1], route[i]) + 3);
+    if (route.length) {
+      let t = shiftMin - ARRIVE_EARLY - travelToVenue(route[route.length - 1]);
+      for (let i = route.length - 1; i >= 0; i--) {
+        times[i] = i === route.length - 1 ? floor5(t) : Math.min(floor5(t), times[i + 1] - 5);
+        if (i > 0) t = times[i] - (travelMin(route[i - 1], route[i]) + 3);
+      }
     }
-    return { driver: d, pax: route, stops: route.map((pp, i) => ({ home: pp, time: times[i] })) };
+    return {
+      driver: d,
+      pax: [...d.pax],
+      withMe: [...d.withMe],
+      stops: route.map((c, i) => ({ home: c.members[0], pax: c.members, time: times[i] })),
+    };
   });
   if (unseated.length) {
     warnings.push({ kind: "problem", text: `${unseated.map((p) => p.name).join(", ")} ${unseated.length > 1 ? "have" : "has"} no seat. Switch on another driver or tick someone with a car.` });
@@ -383,16 +442,32 @@ function buildDropoffs(pickup) {
   let cars;
   if (state.regroup) {
     const pool = pickup.drivers.map((d) => ({ ...d, pax: [] }));
-    // nearest driver-home first, capacity-bound
     const queue = [...pickup.passengers].filter((p) => !pickup.unseated.includes(p));
+    // household clusters ride home together; driver's housemates go with them
+    const clusters = [];
+    const seen = new Set();
     queue.forEach((p) => {
+      const h = houseOf(p);
+      if (seen.has(h)) return;
+      seen.add(h);
+      clusters.push({ house: h, members: queue.filter((q) => houseOf(q) === h), lat: p.lat, lng: p.lng });
+    });
+    clusters.sort((a, b) => b.members.length - a.members.length);
+    clusters.forEach((c) => {
+      const host = pool.find((d) => houseOf(d) === c.house && d.pax.length + c.members.length <= CAP);
+      if (host) { host.pax.push(...c.members); return; }
       let best = null, bestD = Infinity;
       pool.forEach((d) => {
-        if (d.pax.length >= CAP) return;
-        const dd = miles(p, d);
+        if (d.pax.length + c.members.length > CAP) return;
+        const dd = miles(c, d);
         if (dd < bestD) { bestD = dd; best = d; }
       });
-      if (best) best.pax.push(p);
+      if (best) { best.pax.push(...c.members); return; }
+      c.members.forEach((p) => {
+        let b2 = null, bd2 = Infinity;
+        pool.forEach((d) => { if (d.pax.length >= CAP) return; const dd = miles(p, d); if (dd < bd2) { bd2 = dd; b2 = d; } });
+        if (b2) b2.pax.push(p);
+      });
     });
     cars = pool.filter((d) => d.pax.length).map((d) => ({ driver: d, pax: d.pax }));
   } else {
@@ -425,8 +500,11 @@ function pickupMessage(built) {
   const lines = [`Hi all please find below pick up and times for ${venue().name} ${fmtDates()}`, ""];
   built.cars.forEach((car) => {
     if (built.homes) {
-      const bits = car.stops.map((s) => `${fmtTime(s.time)} @${s.home.tag}`).join(" then ");
-      lines.push(`@${car.driver.tag} driver picking up from home ${bits}`, "");
+      const bits = car.stops.map((s) => `${fmtTime(s.time)} ${s.pax.map((p) => "@" + p.tag).join(" ")}`).join(" then ");
+      let line = `@${car.driver.tag} driver`;
+      if (car.withMe.length) line += ` with ${car.withMe.map((p) => "@" + p.tag).join(" ")}`;
+      if (bits) line += `${car.withMe.length ? "," : ""} picking up ${bits}`;
+      lines.push(line, "");
     } else {
       const bits = car.stops.map((s, i) =>
         `${i > 0 ? "then onto " : ""}${s.point.msg} ${fmtTime(s.time)} ${s.pax.map((p) => "@" + p.tag).join(" ")}`);
@@ -626,12 +704,18 @@ function renderResults() {
           <span class="drv">${esc(car.driver.name)}<small>driving from ${esc(car.driver.area)}</small></span>
           <span class="seats">${load}/${CAP} seats</span>
         </div>`;
+      if (car.withMe && car.withMe.length) {
+        const wb = document.createElement("div");
+        wb.className = "stop-block";
+        wb.innerHTML = `<div class="pax"><span class="p driver-pill">With ${esc(car.driver.name)} from home</span>${car.withMe.map((p) => `<span class="p">${esc(p.name)}</span>`).join("")}</div>`;
+        el.appendChild(wb);
+      }
       car.stops.forEach((stop, si) => {
         const sb = document.createElement("div");
         sb.className = "stop-block";
         const place = stop.home ? `${esc(stop.home.name)}'s` : esc(stop.point.name);
         const paxHtml = stop.home
-          ? `<span class="p">${esc(stop.home.name)} · ${esc(stop.home.area)}</span>`
+          ? stop.pax.map((p) => `<span class="p">${esc(p.name)} · ${esc(p.area)}</span>`).join("")
           : stop.pax.map((p) => `<span class="p">${esc(p.name)}${p._flag ? `<em class="det">${esc(p._flag)}</em>` : ""}</span>`).join("");
         sb.innerHTML = `
           <div class="stop-line">
