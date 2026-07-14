@@ -1,27 +1,28 @@
 # Design
 
-Mood: **"6:30am festival load-in — hi-vis amber against dark tarmac, graft and daylight."**
-Color strategy: **Committed** — amber carries 30–40% of the brand surface; white and near-black do the architecture.
+Colorway: **green, white, black** (matches the real MJ Recruit logo: black "MJ" box, RECRUIT wordmark, green "Hospitality specialists" tag).
+Color strategy: Committed. Green carries CTAs, selected states and the worker door; white and black do the architecture. Photos on dark surfaces are grayscale so the green pops; the About food-van photo stays in colour on white.
 
 ## Color (OKLCH only)
 
 ```css
 :root {
   --bg:        oklch(1 0 0);              /* pure white */
-  --surface:   oklch(0.955 0.004 91);     /* light panel */
-  --ink:       oklch(0.18 0.012 80);      /* near-black, warm */
-  --muted:     oklch(0.44 0.012 80);      /* secondary text, ≥4.5:1 on bg */
-  --amber:     oklch(0.85 0.16 91);       /* PRIMARY — hi-vis amber, carries INK text */
-  --amber-deep:oklch(0.55 0.115 75);      /* amber for small text/links on white */
-  --navy:      oklch(0.30 0.06 262);      /* ACCENT — pre-dawn navy, carries WHITE text */
-  --tarmac:    oklch(0.16 0.012 262);     /* dark sections / footer / app header */
-  --tarmac-2:  oklch(0.22 0.015 262);     /* raised surface on tarmac */
-  --ok:        oklch(0.55 0.12 150);      /* success */
-  --warn:      oklch(0.58 0.16 30);       /* error/warning */
+  --surface:   oklch(0.965 0.002 170);
+  --ink:       oklch(0.17 0 0);
+  --muted:     oklch(0.44 0 0);
+  --brand:     oklch(0.55 0.12 165);      /* PRIMARY green, carries WHITE text */
+  --brand-soft:oklch(0.95 0.025 165);
+  --brand-deep:oklch(0.44 0.10 168);      /* green links/labels on white */
+  --brand-bright:oklch(0.74 0.11 165);    /* green accents on dark */
+  --navy:      oklch(0.20 0 0);           /* badge black */
+  --tarmac:    oklch(0.13 0 0);           /* dark sections / footer / app header */
+  --ok:        oklch(0.55 0.12 150);
+  --warn:      oklch(0.58 0.16 30);
 }
 ```
 
-Rules: amber fills → ink text (hi-vis). Navy/tarmac fills → white text. Amber never used for body text on white (use --amber-deep, and only for links/labels ≥ 3:1). No gradients on text. No side-stripe borders.
+Rules: green fills carry WHITE text (saturated mid-tone). Black fills carry white text. Green text on white uses --brand-deep only. No gradients on text, no side-stripe borders, and NO EM DASHES in any user-facing copy (Paul standing rule).
 
 ## Typography
 
@@ -39,8 +40,8 @@ Rules: amber fills → ink text (hi-vis). Navy/tarmac fills → white text. Ambe
 
 ## Components
 
-- **Chevron mark:** MJ wordmark sits in an amber road-chevron block (pure CSS/SVG, no image logo).
-- **Pill toggles** for staff selection (recognition over recall) — tap to toggle, amber = selected, steering-wheel badge = driver.
+- **Logo lockup (.mark):** black "MJ" box + RECRUIT wordmark + green "Hospitality specialists" small tag, recreating the real logo in CSS. `.mark-inverse` (white box) on dark surfaces.
+- **Pill toggles** for staff selection (recognition over recall) — tap to toggle, green = selected, steering-wheel badge = driver.
 - **WhatsApp preview bubble:** dark green-on-dark chat mock matching WA dark mode, monospace-free, with copy button.
 - **Stat strip:** plain numbers with Barlow Condensed, no hero-metric card grid.
 

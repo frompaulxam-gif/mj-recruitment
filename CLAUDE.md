@@ -22,7 +22,7 @@ No build, lint, or test tooling — plain HTML/CSS/JS. Verify changes in the bro
 
 ## Architecture
 
-- `assets/style.css` — design tokens (OKLCH custom props) + shared components (buttons, fields, chips, seg toggles, toast). `assets/site.css` (marketing) and `assets/app.css` (app) layer on top. **PRODUCT.md and DESIGN.md at the repo root are the design source of truth** (hi-vis amber on tarmac, Barlow / Barlow Condensed, amber fills carry ink text, navy/tarmac fills carry white).
+- `assets/style.css` — design tokens (OKLCH custom props) + shared components (buttons, fields, chips, seg toggles, toast). `assets/site.css` (marketing) and `assets/app.css` (app) layer on top. **PRODUCT.md and DESIGN.md at the repo root are the design source of truth** (green/white/black matching the real MJ Recruit logo, Barlow / Barlow Condensed, green and black fills carry white text). The trading name is MJ Recruit ("Hospitality specialists"). No em dashes in any user-facing copy.
 - `assets/app.js` is self-contained: demo staff list (`BASE_STAFF`, approximate area-level lat/lng), pickup points (`POINTS`, 3 core + suggestible extras like Meynell's Gorse P&R), venues, then the assignment algorithm — passengers → nearest active point, nearest free driver per point (capacity 4 + driver), overflow chains a second stop onto a car ("then onto", ≤4.5 mi), times worked back from shift start (haversine × 1.35 road factor ÷ 36 mph + buffers, floored to 5 min). Drop-off mode optionally regroups passengers by home proximity. State persists in localStorage (`mj_state`, `mj_custom_staff`).
 
 ## Domain rules (do not break)

@@ -21,7 +21,7 @@ This project = (1) a marketing site that wins new caterer/venue clients and take
 
 ## Brand Personality
 
-**Grafting, dependable, early-morning.** The brand of a crew that's loading in at dawn while everyone else sleeps. Hi-vis amber on dark tarmac, road-sign typography, plain talk. Confidence through operational competence — pickup points, run sheets, staff counts — not corporate polish.
+**Grafting, dependable, early-morning.** The brand of a crew that's loading in at dawn while everyone else sleeps. Green, white and black (the real MJ Recruit logo colours), road-sign typography, plain talk. The trading name is **MJ Recruit, "Hospitality specialists"**. Confidence through operational competence — pickup points, run sheets, staff counts — not corporate polish.
 
 ## Anti-references
 
@@ -36,10 +36,11 @@ This project = (1) a marketing site that wins new caterer/venue clients and take
 2. **Phone-first always.** Dee's phone is the primary device; every screen must work one-handed at 375px.
 3. **The message is the product.** The calculator's output must match Dee's exact WhatsApp format — @tags, points, times — copy-paste ready.
 4. **Low-friction forms.** Worker application ≤ 1 minute, D&J-style fields only (licence + transport questions included).
-5. **Amber means action.** Hi-vis amber reserved for CTAs, drivers, and the things that move — never decoration wallpaper.
+5. **Green means action.** Brand green reserved for CTAs, selected states and the things that move, never decoration wallpaper.
+6. **Write like a person.** Plain persuasive English, short sentences, no em dashes anywhere in copy.
 
 ## Accessibility & Inclusion
 
-- WCAG AA: body text ≥4.5:1, large text ≥3:1; amber fills carry near-black text (hi-vis semantics), navy fills carry white.
+- WCAG AA: body text ≥4.5:1, large text ≥3:1; green and black fills carry white text.
 - Reduced-motion alternatives for all animation.
 - Plain English throughout — many workers speak English as a second language; forms use short labels, no jargon.

@@ -1,24 +1,25 @@
-/* MJ Recruitment — design tokens + shared styles
-   Mood: 6:30am festival load-in — hi-vis amber on dark tarmac. */
+/* MJ Recruit — design tokens + shared styles
+   Colorway: green, white, black (matches the real MJ Recruit logo). */
 
 :root {
   --bg:         oklch(1 0 0);
-  --surface:    oklch(0.955 0.004 91);
-  --ink:        oklch(0.18 0.012 80);
-  --muted:      oklch(0.44 0.012 80);
-  --amber:      oklch(0.85 0.16 91);
-  --amber-soft: oklch(0.93 0.07 95);
-  --amber-deep: oklch(0.55 0.115 75);
-  --navy:       oklch(0.30 0.06 262);
-  --tarmac:     oklch(0.16 0.012 262);
-  --tarmac-2:   oklch(0.22 0.015 262);
-  --tarmac-3:   oklch(0.28 0.02 262);
-  --line:       oklch(0.87 0.005 91);
-  --line-dark:  oklch(0.32 0.02 262);
+  --surface:    oklch(0.965 0.002 170);
+  --ink:        oklch(0.17 0 0);
+  --muted:      oklch(0.44 0 0);
+  --brand:      oklch(0.55 0.12 165);   /* primary green — carries WHITE text */
+  --brand-soft: oklch(0.95 0.025 165);
+  --brand-deep: oklch(0.44 0.10 168);   /* green for links/labels on white */
+  --brand-bright: oklch(0.74 0.11 165); /* green accents on dark surfaces */
+  --navy:       oklch(0.20 0 0);        /* badge black */
+  --tarmac:     oklch(0.13 0 0);
+  --tarmac-2:   oklch(0.19 0 0);
+  --tarmac-3:   oklch(0.26 0 0);
+  --line:       oklch(0.88 0.003 170);
+  --line-dark:  oklch(0.30 0 0);
   --ok:         oklch(0.55 0.12 150);
   --warn:       oklch(0.58 0.16 30);
-  --on-dark:    oklch(0.97 0.005 91);
-  --on-dark-muted: oklch(0.72 0.015 91);
+  --on-dark:    oklch(0.97 0 0);
+  --on-dark-muted: oklch(0.72 0 0);
 
   --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
   --font-body: "Barlow", system-ui, sans-serif;
@@ -63,39 +64,42 @@ h1, h2, h3 {
 
 p { max-width: 68ch; }
 
-a { color: var(--amber-deep); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a { color: var(--brand-deep); text-decoration-thickness: 1px; text-underline-offset: 3px; }
 a:hover { text-decoration-thickness: 2px; }
 
 :focus-visible {
-  outline: 3px solid var(--amber);
+  outline: 3px solid var(--brand);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-::selection { background: var(--amber); color: var(--ink); }
+::selection { background: var(--brand); color: #fff; }
 
-/* ---------- Wordmark ---------- */
+/* ---------- Wordmark (recreates the MJ Recruit logo lockup) ---------- */
 
 .mark {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
   color: inherit;
 }
-.mark .chev {
-  width: 40px; height: 40px;
-  background: var(--amber);
-  border-radius: 8px;
+.mark .mj-box {
+  width: 44px; height: 44px;
+  background: var(--ink);
+  color: #fff;
   display: grid; place-items: center;
   flex: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
 }
-.mark .chev svg { width: 22px; height: 22px; }
 .mark .wordmark {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.35rem;
-  letter-spacing: 0.02em;
+  font-size: 1.5rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   line-height: 0.95;
 }
@@ -103,9 +107,13 @@ a:hover { text-decoration-thickness: 2px; }
   display: block;
   font-weight: 500;
   font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  color: var(--on-dark-muted);
+  letter-spacing: 0.16em;
+  color: var(--brand-deep);
 }
+/* inverse lockup for dark surfaces */
+.mark-inverse .mj-box { background: #fff; color: var(--ink); }
+.mark-inverse .wordmark { color: var(--on-dark); }
+.mark-inverse .wordmark small { color: var(--brand-bright); }
 
 /* ---------- Buttons ---------- */
 
@@ -126,11 +134,11 @@ a:hover { text-decoration-thickness: 2px; }
   min-height: 48px;
 }
 .btn:active { transform: scale(0.98); }
-.btn-amber { background: var(--amber); color: var(--ink); }
-.btn-amber:hover { background: oklch(0.88 0.155 93); }
+.btn-brand { background: var(--brand); color: #fff; }
+.btn-brand:hover { background: oklch(0.49 0.12 165); }
 .btn-outline { background: transparent; color: inherit; border-color: currentColor; }
-.btn-outline:hover { border-color: var(--amber); color: var(--amber-deep); }
-.on-dark .btn-outline:hover { color: var(--amber); }
+.btn-outline:hover { border-color: var(--brand); color: var(--brand-deep); }
+.on-dark .btn-outline:hover { color: var(--brand-bright); }
 .btn-dark { background: var(--tarmac); color: var(--on-dark); }
 .btn-dark:hover { background: var(--tarmac-2); }
 .btn[disabled] { opacity: 0.45; cursor: not-allowed; }
@@ -153,11 +161,11 @@ a:hover { text-decoration-thickness: 2px; }
   transition: border-color 150ms;
 }
 .field textarea { min-height: 96px; resize: vertical; }
-.field input::placeholder, .field textarea::placeholder { color: oklch(0.50 0.01 80); }
+.field input::placeholder, .field textarea::placeholder { color: oklch(0.50 0 0); }
 .field input:focus, .field select:focus, .field textarea:focus {
   outline: none;
-  border-color: var(--amber-deep);
-  box-shadow: 0 0 0 3px oklch(0.85 0.16 91 / 0.35);
+  border-color: var(--brand-deep);
+  box-shadow: 0 0 0 3px oklch(0.55 0.12 165 / 0.25);
 }
 .field input.error { border-color: var(--warn); }
 .field .err-msg { font-size: 0.85rem; color: var(--warn); display: none; }
@@ -183,9 +191,9 @@ a:hover { text-decoration-thickness: 2px; }
 }
 .chip:active { transform: scale(0.96); }
 .chip[aria-pressed="true"] {
-  background: var(--amber);
-  border-color: var(--amber);
-  color: var(--ink);
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
   font-weight: 600;
 }
 .chip[aria-pressed="true"]::before { content: "✓"; font-weight: 700; }
@@ -207,7 +215,7 @@ a:hover { text-decoration-thickness: 2px; }
   color: var(--ink);
 }
 .seg button + button { border-left: 1.5px solid var(--line); }
-.seg button[aria-pressed="true"] { background: var(--amber); font-weight: 600; }
+.seg button[aria-pressed="true"] { background: var(--brand); color: #fff; font-weight: 600; }
 
 /* Success state */
 .form-success {

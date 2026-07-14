@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Run sheet — MJ Recruitment</title>
+<title>Run sheet · MJ Recruit</title>
 <meta name="description" content="Build pickup and drop-off run sheets for MJ Recruitment event crews.">
 <meta name="robots" content="noindex">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f5b800'/%3E%3Cpath d='M18 20l14 12-14 12M34 20l14 12-14 12' stroke='%23231f14' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23161616'/%3E%3Ctext x='32' y='42' font-family='Arial, Helvetica, sans-serif' font-size='24' font-weight='bold' fill='%23ffffff' text-anchor='middle' letter-spacing='1'%3EMJ%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,10 +17,8 @@
 
 <header class="app-header">
   <div class="inner">
-    <a class="mark" href="index.html" aria-label="MJ Recruitment home" style="color: var(--on-dark); text-decoration: none;">
-      <span class="chev" aria-hidden="true">
-        <svg viewBox="0 0 64 64" fill="none"><path d="M18 20l14 12-14 12M34 20l14 12-14 12" stroke="oklch(0.18 0.012 80)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
+    <a class="mark mark-inverse" href="index.html" aria-label="MJ Recruit home">
+      <span class="mj-box" aria-hidden="true">MJ</span>
     </a>
     <h1>Run sheet</h1>
     <a class="home-link" href="index.html">mjevents.co.uk</a>
@@ -79,23 +77,23 @@
     </div>
     <div class="opt-row" id="regroup-row" hidden>
       <p class="who">Regroup by home address
-        <small>Fastest way home — cars may differ from the morning</small></p>
+        <small>Fastest way home. Cars may differ from the morning</small></p>
       <button class="switch" id="regroup-switch" aria-pressed="true" aria-label="Regroup by home address"></button>
     </div>
     <div id="warnings"></div>
     <div id="cars"></div>
     <div class="wa">
-      <p class="wa-label">Message preview — WhatsApp</p>
+      <p class="wa-label">Message preview · WhatsApp</p>
       <div class="bubble" id="wa-bubble"></div>
     </div>
   </section>
 
-  <p class="footnote">Demo data — crew addresses are approximate. Times assume average driving speeds; always sanity-check.</p>
+  <p class="footnote">Demo data. Crew addresses are approximate and times assume average driving speeds, so always sanity-check.</p>
 </main>
 
 <div class="actionbar">
   <div class="inner">
-    <button class="btn btn-amber" id="build-btn" type="button">Build run sheet</button>
+    <button class="btn btn-brand" id="build-btn" type="button">Build run sheet</button>
     <button class="btn btn-dark" id="copy-btn" type="button" hidden>Copy message</button>
   </div>
 </div>
@@ -120,7 +118,7 @@
     </div>
     <div style="display: flex; gap: 10px; margin-top: 8px;">
       <button class="btn btn-outline" type="button" id="ac-cancel" style="flex: 1;">Cancel</button>
-      <button class="btn btn-amber" type="submit" style="flex: 1;">Add</button>
+      <button class="btn btn-brand" type="submit" style="flex: 1;">Add</button>
     </div>
   </form>
 </dialog>

@@ -198,11 +198,11 @@ function buildPickups() {
       suggestions.push({
         point: bestCand,
         names: bestCover.map((p) => p.name),
-        text: `${bestCover.map((p) => p.name).join(" and ")} ${bestCover.length > 1 ? "are" : "is"} a long way from every stop — the nearest is ${fmt1(bestCover[0]._ptDist)} mi away. ${bestCand.name} is only ${fmt1(miles(bestCover[0], bestCand))} mi from ${bestCover.length > 1 ? "them" : bestCover[0].name}.`,
+        text: `${bestCover.map((p) => p.name).join(" and ")} ${bestCover.length > 1 ? "are" : "is"} a long way from every stop, the nearest is ${fmt1(bestCover[0]._ptDist)} mi away. ${bestCand.name} is only ${fmt1(miles(bestCover[0], bestCand))} mi from ${bestCover.length > 1 ? "them" : bestCover[0].name}.`,
       });
     }
     far.filter((p) => !bestCand || miles(p, bestCand) > 1.6).forEach((p) => {
-      warnings.push({ kind: "info", text: `${p.name} is ${fmt1(p._ptDist)} mi from ${p._pt.name} — they may need to make their own way there.` });
+      warnings.push({ kind: "info", text: `${p.name} is ${fmt1(p._ptDist)} mi from ${p._pt.name}. They may need to make their own way there.` });
     });
   }
 
@@ -252,7 +252,7 @@ function buildPickups() {
       best.stops.push({ point, pax: [p] });
       if (bestScore > 4.5) {
         p._flag = `detour +${fmt1(bestScore)} mi`;
-        warnings.push({ kind: "info", text: `${best.driver.name} detours to ${point.name} to pick up ${p.name} (~${fmt1(bestScore)} mi extra) — shuffle crew or add a driver if that's too far.` });
+        warnings.push({ kind: "info", text: `${best.driver.name} detours to ${point.name} to pick up ${p.name} (~${fmt1(bestScore)} mi extra). Shuffle crew or add a driver if that's too far.` });
       }
     }
   });
@@ -275,7 +275,7 @@ function buildPickups() {
   if (unseated.length) {
     warnings.push({
       kind: "problem",
-      text: `${unseated.map((p) => p.name).join(", ")} ${unseated.length > 1 ? "have" : "has"} no seat — switch on another driver, or tick someone with a car.`,
+      text: `${unseated.map((p) => p.name).join(", ")} ${unseated.length > 1 ? "have" : "has"} no seat. Switch on another driver or tick someone with a car.`,
     });
   }
   const spare = pool.map((d) => d.name);
@@ -446,18 +446,18 @@ function renderMath() {
   const m = seatsMath();
   const bar = $("#mathbar");
   bar.classList.remove("short");
-  if (!m.crew) { bar.textContent = "Tick who's working — then build the run sheet"; return; }
+  if (!m.crew) { bar.textContent = "Tick who's working, then build the run sheet"; return; }
   if (!m.drivers) {
     bar.classList.add("short");
-    bar.textContent = `${m.crew} crew · no drivers — switch someone on below`;
+    bar.textContent = `${m.crew} crew · no drivers. Switch someone on below`;
     return;
   }
   const spare = m.capacity - m.pax;
   if (spare < 0) {
     bar.classList.add("short");
-    bar.textContent = `${m.crew} crew · ${m.drivers} driving — ${-spare} seat${spare === -1 ? "" : "s"} short. Add a driver`;
+    bar.textContent = `${m.crew} crew · ${m.drivers} driving · ${-spare} seat${spare === -1 ? "" : "s"} short. Add a driver`;
   } else {
-    bar.innerHTML = `${m.crew} crew · ${m.drivers} driving · ${m.drivers * (CAP + 1)} seats — <span class="ok-dot">everyone seated ✓</span>${spare ? ` <span style="opacity:0.7">(${spare} spare)</span>` : ""}`;
+    bar.innerHTML = `${m.crew} crew · ${m.drivers} driving · ${m.drivers * (CAP + 1)} seats · <span class="ok-dot">everyone seated ✓</span>${spare ? ` <span style="opacity:0.7">(${spare} spare)</span>` : ""}`;
   }
 }
 
@@ -483,7 +483,7 @@ function renderResults() {
       el.className = "callout";
       el.innerHTML = `<p><strong>Suggested new stop:</strong> ${esc(s.text)}</p>`;
       const btn = document.createElement("button");
-      btn.className = "btn btn-amber"; btn.type = "button";
+      btn.className = "btn btn-brand"; btn.type = "button";
       btn.textContent = `Add ${s.point.name} as a stop`;
       btn.addEventListener("click", () => {
         state.extraStops.add(s.point.id);
@@ -533,7 +533,7 @@ function renderResults() {
   } else {
     const drop = buildDropoffs(built);
     if (!drop.cars.length) {
-      warnEl.innerHTML = `<div class="callout problem"><p>No cars to plan — build the pickups first.</p></div>`;
+      warnEl.innerHTML = `<div class="callout problem"><p>No cars to plan. Build the pickups first.</p></div>`;
     }
     drop.cars.forEach((car) => {
       const el = document.createElement("div");
@@ -627,13 +627,13 @@ $("#build-btn").addEventListener("click", () => {
 $("#copy-btn").addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(state.message || "");
-    toast("Copied — paste it into the group ✓");
+    toast("Copied. Paste it into the group ✓");
   } catch {
     const ta = document.createElement("textarea");
     ta.value = state.message || "";
     document.body.appendChild(ta); ta.select();
     document.execCommand("copy"); ta.remove();
-    toast("Copied — paste it into the group ✓");
+    toast("Copied. Paste it into the group ✓");
   }
 });
 
