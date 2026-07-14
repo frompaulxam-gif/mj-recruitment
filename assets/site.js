@@ -79,6 +79,11 @@ document.querySelectorAll("form").forEach((form) => {
         const msg = input.closest(".field").querySelector(".err-msg");
         if (msg) msg.textContent = "That number doesn't look right. UK mobile, like 07700 900123";
       }
+      if (!bad && input.type === "email" && !/.+@.+\..+/.test(input.value)) {
+        bad = true;
+        const msg = input.closest(".field").querySelector(".err-msg");
+        if (msg) msg.textContent = "That email doesn't look right";
+      }
       input.classList.toggle("error", bad);
       input.closest(".field").classList.toggle("has-error", bad);
       if (bad && !firstBad) firstBad = input;

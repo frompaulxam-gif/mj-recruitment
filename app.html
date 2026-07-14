@@ -41,13 +41,6 @@
       <input id="ov-name" placeholder="e.g. Warwick Racecourse" autocomplete="off">
       <span class="hint">New venue, so times assume about a 45 minute drive. Nudge with − and + after building.</span>
     </div>
-    <div class="field">
-      <label>Pickup style</label>
-      <div class="chips" data-single id="style-chips">
-        <button type="button" class="chip" data-style="points" aria-pressed="true">Meeting points</button>
-        <button type="button" class="chip" data-style="homes" aria-pressed="false">From homes</button>
-      </div>
-    </div>
     <div class="row2">
       <div class="field" style="margin-bottom: 0;">
         <label for="ev-date">Dates</label>
@@ -97,6 +90,13 @@
     </div>
     <div id="warnings"></div>
     <div id="cars"></div>
+    <div class="field" style="margin-top: 4px;">
+      <label>Pickup style</label>
+      <div class="chips" data-single id="style-chips">
+        <button type="button" class="chip" data-style="points" aria-pressed="true">Meeting points</button>
+        <button type="button" class="chip" data-style="homes" aria-pressed="false">From homes</button>
+      </div>
+    </div>
     <div class="wa">
       <p class="wa-label">Message preview · WhatsApp</p>
       <div class="bubble" id="wa-bubble"></div>
@@ -152,6 +152,6 @@
 
 <div class="toast" id="toast" role="status"></div>
 
-<script src="assets/app.js?v=6"></script>
+<script src="assets/app.js?v=7"></script>
 </body>
 </html>

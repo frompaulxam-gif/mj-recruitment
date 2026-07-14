@@ -191,6 +191,18 @@
 }
 .band-brand .crew-photo img { filter: brightness(1.15); }
 .band-brand .crew-photo img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4/3; }
+.crew-count-line {
+  margin-top: 22px;
+  font-size: 1.05rem;
+  color: oklch(0.90 0.02 165);
+}
+.crew-count-line .count {
+  display: block;
+  font-weight: 600;
+  font-size: 2.6rem;
+  line-height: 1.05;
+  color: #fff;
+}
 .perks { margin-top: 26px; display: grid; gap: 14px; font-size: 1.05rem; max-width: 46ch; }
 .perks li { list-style: none; display: flex; gap: 12px; align-items: baseline; }
 .perks li::before {
