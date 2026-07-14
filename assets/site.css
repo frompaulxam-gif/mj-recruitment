@@ -248,7 +248,7 @@
 /* ---------- Quote stars ---------- */
 .quotes .q .stars {
   display: block;
-  color: oklch(0.78 0.15 85); /* review gold */
+  color: oklch(0.72 0.155 75); /* review gold */
   letter-spacing: 3px;
   font-size: 0.95rem;
   margin-bottom: 8px;

@@ -154,7 +154,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* ---------- Forms ---------- */
 
-.field { display: grid; gap: 6px; margin-bottom: 18px; }
+.field { display: grid; gap: 6px; margin-bottom: 18px; align-content: start; }
 .field label { font-weight: 600; font-size: 0.95rem; }
 .field .hint { font-size: 0.85rem; color: var(--muted); }
 .field input, .field select, .field textarea {
