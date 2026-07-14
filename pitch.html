@@ -58,6 +58,23 @@
   .ret .big { color: var(--brand-bright); font-weight: 600; font-size: 1.1rem; margin-bottom: 10px; }
   .ret p { color: var(--on-dark-muted); font-size: 0.95rem; }
   .ill-note { margin-top: 12px; font-size: 0.85rem; color: var(--on-dark-muted); }
+
+  .cancel-callout { margin-top: 18px; border: 1px solid var(--brand); border-radius: var(--radius-card); padding: 18px 20px; background: oklch(0.17 0.02 168); }
+  .cancel-callout .n { font-weight: 600; font-size: 2.1rem; line-height: 1; color: #fff; }
+  .cancel-callout p { color: var(--on-dark-muted); font-size: 0.98rem; margin-top: 6px; max-width: 60ch; }
+  .cancel-callout p strong { color: var(--on-dark); }
+  .plans { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); align-items: stretch; }
+  .plan { position: relative; background: var(--tarmac-2); border: 1px solid var(--line-dark); border-radius: var(--radius-card); padding: 26px 22px 22px; display: flex; flex-direction: column; gap: 8px; }
+  .plan-hero { border-color: var(--brand); background: oklch(0.17 0.02 168); }
+  .plan .badge { position: absolute; top: -13px; left: 20px; background: var(--brand); color: #fff; font-weight: 600; font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; }
+  .plan h3 { font-size: 1.5rem; }
+  .plan .setup { color: var(--on-dark-muted); font-size: 0.95rem; }
+  .plan .mo { font-weight: 600; font-size: 2.3rem; line-height: 1; color: #fff; }
+  .plan .mo small { font-size: 1rem; font-weight: 500; color: var(--on-dark-muted); }
+  .plan ul { margin: 8px 0 0 16px; display: grid; gap: 6px; }
+  .plan li { color: var(--on-dark-muted); font-size: 0.95rem; }
+  .plan .fr { margin-top: auto; padding-top: 12px; color: var(--brand-bright); font-weight: 600; font-size: 0.95rem; }
+  .plan-note { margin-top: 14px; color: var(--on-dark-muted); font-size: 0.95rem; }
   .rise.pending { opacity: 0; transform: translateY(16px); }
   .rise.shown { opacity: 1; transform: none; transition: opacity 550ms var(--ease-out), transform 550ms var(--ease-out); }
   .stats .rise.shown:nth-child(2) { transition-delay: 80ms; }
@@ -71,7 +88,7 @@
   @media print {
     body { background: white; }
     .wrap * { color: #111 !important; }
-    .price, .price.hero-price, .stat, .ret { background: white; border: 1px solid #888; }
+    .price, .price.hero-price, .stat, .ret, .plan, .cancel-callout { background: white; border: 1px solid #888; }
   }
 </style>
 </head>
@@ -130,12 +147,18 @@
     <div class="phase">
       <p class="tag">Phase 2 <small>next</small></p>
       <div>
-        <h2>Availability link + auto chase-ups</h2>
+        <h2>The midnight rule: no-shows solved</h2>
         <ul>
           <li>Dee posts <strong>one link per date-set</strong>: workers tap the dates they can do; the tally builds itself</li>
-          <li><strong>Night-before reminders</strong> with 👍 tracking, so silence gets flagged before it becomes a no-show</li>
-          <li><strong>Backup list</strong>: anyone not confirmed by the cut-off (say midnight) is dropped and the next standby gets a text to step in. No more finding out at the pickup point</li>
+          <li><strong>The midnight rule:</strong> night-before reminders with 👍 tracking. No confirmation by midnight? The system drops them and <strong>texts the next standby automatically</strong>. The replacement is found while everyone sleeps, not at the pickup point</li>
+          <li><strong>Points system:</strong> confirm-then-cancel puts points against your name, shown on the run sheet right next to your shift count. Reliability becomes visible, and repeat offenders stop making the crew list</li>
         </ul>
+        <div class="cancel-callout rise">
+          <p class="n">£50–100</p>
+          <p><strong>lost per staff member on a late cancellation</strong> (MJ's own numbers). One dropped
+            10-person crew is £500–£1,000 gone. If the midnight rule saves <strong>one</strong> cancellation,
+            it has paid for months of the whole system.</p>
+        </div>
       </div>
     </div>
     <div class="phase">
@@ -169,14 +192,14 @@
   </div>
 
 
-  <h2 class="sec-h rise">What the £1,950 buys back</h2>
+  <h2 class="sec-h rise">What it buys back</h2>
   <div class="returns">
     <div class="ret rise">
       <h3>New clients</h3>
-      <p class="big">1 new caterer ≈ build paid for</p>
-      <p>One caterer booking a single festival weekend typically covers the whole build.
-        Every event after that is margin. The enquiry form does the qualifying, so the
-        call back is a close, not a fact-find.</p>
+      <p class="big">1 new caterer ≈ a year of fees</p>
+      <p>One caterer booking a single festival weekend typically covers a year of the
+        monthly plan. Every event after that is margin. The enquiry form does the
+        qualifying, so the call back is a close, not a fact-find.</p>
     </div>
     <div class="ret rise">
       <h3>More workers, fewer gaps</h3>
@@ -195,20 +218,46 @@
   </div>
   <p class="ill-note">The stats above are sourced (Stanford, NCASS, AIF 2025, D&amp;J's own site). The projections are ours and depend on the rates MJ sets.</p>
 
-  <div class="price-row">
-    <div class="price hero-price">
-      <p class="n">£1,950</p>
-      <p>Phase 1 build: site, forms, run sheet tool, live on your domain</p>
+  <h2 class="sec-h rise">Pick a lane</h2>
+  <div class="plans">
+    <div class="plan rise">
+      <h3>Site</h3>
+      <p class="setup">£199 setup</p>
+      <p class="mo">£35<small>/month</small></p>
+      <ul>
+        <li>Website live on mjevents.co.uk</li>
+        <li>Enquiry + application forms straight into WhatsApp</li>
+        <li>Hosting, changes and support included</li>
+      </ul>
+      <p class="fr">The shop window, sorted</p>
     </div>
-    <div class="price">
-      <p class="n">£50<small>/month</small></p>
-      <p>Hosting, upkeep, changes and support. Cancel any time</p>
+    <div class="plan plan-hero rise">
+      <span class="badge">Recommended for MJ</span>
+      <h3>Site + Run sheet</h3>
+      <p class="setup">£299 setup</p>
+      <p class="mo">£69<small>/month</small></p>
+      <ul>
+        <li>Everything in Site</li>
+        <li>Dee's run sheet: cars, times, WhatsApp message, shift counts</li>
+        <li>Crew list kept up to date as people join</li>
+        <li>Priority support</li>
+      </ul>
+      <p class="fr">£16 a week. Less than one head's petrol money</p>
     </div>
-    <div class="price">
-      <p class="n">Per phase</p>
-      <p>Phases 2 and 3 quoted separately, only if phase 1 earns it</p>
+    <div class="plan rise">
+      <h3>Full system</h3>
+      <p class="setup">£399 setup</p>
+      <p class="mo">£129<small>/month</small></p>
+      <ul>
+        <li>Everything in Site + Run sheet</li>
+        <li>Availability links and the midnight rule with automatic standby texts, as they ship</li>
+        <li>Points system, then timesheets + staff portal</li>
+        <li>Text messages included</li>
+      </ul>
+      <p class="fr">One avoided cancellation pays for 4+ months</p>
     </div>
   </div>
+  <p class="plan-note rise">No contract. Cancel any month and the website stays yours. Start on one lane, move up when a phase proves itself.</p>
 
   <p class="anchor-note">For scale: a web agency quotes <strong>£5,000–£15,000</strong> for a bespoke
     site with a management system like this, plus bigger monthly fees. And they've never
@@ -229,6 +278,11 @@
       io.unobserve(e.target);
     }), { rootMargin: "0px 0px -8% 0px" });
     document.querySelectorAll(".rise.pending").forEach((el) => io.observe(el));
+    // Observers never fire in hidden tabs; never leave content invisible
+    setTimeout(() => document.querySelectorAll(".rise.pending").forEach((el) => {
+      el.classList.add("shown");
+      el.classList.remove("pending");
+    }), 5000);
   }
   // Count-up is an enhancement: the markup already holds the final values.
   const fmt = (n) => n.toLocaleString("en-GB");

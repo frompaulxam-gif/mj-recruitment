@@ -114,4 +114,9 @@ if (window.matchMedia("(prefers-reduced-motion: no-preference)").matches && "Int
       io.observe(el);
     }
   });
+  // Observers never fire in hidden tabs; never leave content invisible
+  setTimeout(() => document.querySelectorAll(".reveal.pending").forEach((el) => {
+    el.classList.add("shown");
+    el.classList.remove("pending");
+  }), 5000);
 }
