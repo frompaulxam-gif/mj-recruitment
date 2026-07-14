@@ -233,6 +233,13 @@ body { background: var(--surface); }
   border-radius: 999px;
 }
 .car .pax .p.driver-pill { background: var(--navy); color: white; }
+.car .pax .p .det {
+  font-style: normal;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--amber-deep);
+  margin-left: 7px;
+}
 
 .callout {
   border: 1.5px solid var(--amber-deep);

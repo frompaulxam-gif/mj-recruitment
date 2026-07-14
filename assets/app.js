@@ -164,6 +164,7 @@ function buildPickups() {
 
   // Nearest active point per passenger
   passengers.forEach((p) => {
+    p._flag = null;
     let best = null, bestD = Infinity;
     activePoints.forEach((pt) => {
       const d = miles(p, pt);
@@ -238,6 +239,7 @@ function buildPickups() {
     } else {
       best.stops.push({ point, pax: [p] });
       if (bestScore > 4.5) {
+        p._flag = `detour +${fmt1(bestScore)} mi`;
         warnings.push({ kind: "info", text: `${best.driver.name} detours to ${point.name} to pick up ${p.name} (~${fmt1(bestScore)} mi extra) — shuffle crew or add a driver if that's too far.` });
       }
     }
@@ -507,7 +509,7 @@ function renderResults() {
               <button type="button" aria-label="5 minutes later">+</button>
             </span>
           </div>
-          <div class="pax">${stop.pax.map((p) => `<span class="p">${esc(p.name)}</span>`).join("")}</div>`;
+          <div class="pax">${stop.pax.map((p) => `<span class="p">${esc(p.name)}${p._flag ? `<em class="det">${esc(p._flag)}</em>` : ""}</span>`).join("")}</div>`;
         const [minus, plus] = sb.querySelectorAll(".tweak button");
         minus.addEventListener("click", () => { stop.time -= 5; renderResults(); });
         plus.addEventListener("click", () => { stop.time += 5; renderResults(); });
