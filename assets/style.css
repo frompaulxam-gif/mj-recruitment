@@ -12,7 +12,7 @@
   --surface:    oklch(0.965 0.002 170);
   --ink:        oklch(0.17 0 0);
   --muted:      oklch(0.44 0 0);
-  --brand:      oklch(0.55 0.12 165);   /* primary green — carries WHITE text */
+  --brand:      oklch(0.53 0.115 165);  /* primary green — carries WHITE text (4.9:1) */
   --brand-soft: oklch(0.95 0.025 165);
   --brand-deep: oklch(0.44 0.10 168);   /* green for links/labels on white */
   --brand-bright: oklch(0.74 0.11 165); /* green accents on dark surfaces */
@@ -176,7 +176,7 @@ a:hover { text-decoration-thickness: 2px; }
   box-shadow: 0 0 0 3px oklch(0.55 0.12 165 / 0.25);
 }
 .field input.error { border-color: var(--warn); }
-.field .err-msg { font-size: 0.85rem; color: var(--warn); display: none; }
+.field .err-msg { font-size: 0.9rem; font-weight: 500; color: var(--warn); display: none; }
 .field.has-error .err-msg { display: block; }
 
 /* Chip groups — selection over free text (uxify 2.8) */

@@ -43,7 +43,9 @@
 
   @media (max-width: 560px) { .phase { grid-template-columns: 1fr; gap: 6px; } }
   @media print {
-    body { background: white; color: black; }
+    body { background: white; }
+    .wrap * { color: #111 !important; }
+    .price, .price.hero-price { background: white; border: 1px solid #888; }
   }
 </style>
 </head>

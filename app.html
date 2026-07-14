@@ -36,6 +36,11 @@
       <label>Venue</label>
       <div class="chips" data-single id="venue-chips"></div>
     </div>
+    <div class="field" id="ov-field" hidden>
+      <label for="ov-name">Venue name</label>
+      <input id="ov-name" placeholder="e.g. Warwick Racecourse" autocomplete="off">
+      <span class="hint">New venue, so times assume about a 45 minute drive. Nudge with − and + after building.</span>
+    </div>
     <div class="row2">
       <div class="field" style="margin-bottom: 0;">
         <label for="ev-date">Dates <span class="hint">(pick to add)</span></label>
@@ -70,7 +75,7 @@
 
   <!-- Results -->
   <section class="panel" id="results" hidden aria-labelledby="h-results">
-    <h2 id="h-results">Run sheet</h2>
+    <h2 id="h-results">Cars and times</h2>
     <div class="mode-seg" role="group" aria-label="Run sheet mode">
       <button type="button" id="mode-pickup" aria-pressed="true">Pickups</button>
       <button type="button" id="mode-dropoff" aria-pressed="false">Drop-offs</button>
@@ -125,6 +130,6 @@
 
 <div class="toast" id="toast" role="status"></div>
 
-<script src="assets/app.js"></script>
+<script src="assets/app.js?v=2"></script>
 </body>
 </html>

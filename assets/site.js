@@ -52,13 +52,20 @@ document.querySelectorAll(".seg").forEach((seg) => {
   });
 });
 
-// Demo form handling: validate required fields, then show success state.
+// Form handling: validate, then hand off to WhatsApp (the real submit).
+const ukMobile = (v) => /^(?:\+?44|0)7\d{9}$/.test(v.replace(/[\s\-().]/g, ""));
+
 document.querySelectorAll("form").forEach((form) => {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     let firstBad = null;
     form.querySelectorAll("input[required]").forEach((input) => {
-      const bad = !input.value.trim();
+      let bad = !input.value.trim();
+      if (!bad && input.type === "tel" && !ukMobile(input.value)) {
+        bad = true;
+        const msg = input.closest(".field").querySelector(".err-msg");
+        if (msg) msg.textContent = "That number doesn't look right. UK mobile, like 07700 900123";
+      }
       input.classList.toggle("error", bad);
       input.closest(".field").classList.toggle("has-error", bad);
       if (bad && !firstBad) firstBad = input;
@@ -67,8 +74,17 @@ document.querySelectorAll("form").forEach((form) => {
     form.classList.add("submitted");
     const success = form.nextElementSibling;
     if (success) {
+      const text = formToMessage(form);
       const wa = success.querySelector(".wa-send");
-      if (wa) wa.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(formToMessage(form))}`;
+      if (wa) wa.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
+      const mail = success.querySelector(".mail-send");
+      if (mail) {
+        const subject = form.id === "crew-form" ? "Crew application" : "Staff enquiry";
+        mail.href = `mailto:staff@mjevents.co.uk?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
+      }
+      const echo = success.querySelector(".echo");
+      const phone = form.querySelector('input[type="tel"]')?.value.trim();
+      if (echo && phone) echo.textContent = `Your number: ${phone}. Give it a quick check before sending.`;
       success.scrollIntoView({ block: "center", behavior: "smooth" });
     }
   });

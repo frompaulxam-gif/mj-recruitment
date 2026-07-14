@@ -104,10 +104,13 @@ function persist() {
   });
 }
 
+function localIso(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
 function nextSaturday() {
   const d = new Date();
   d.setDate(d.getDate() + ((6 - d.getDay() + 7) % 7 || 7));
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  return localIso(d);
 }
 
 /* ---------------- Geometry & time ---------------- */
@@ -173,6 +176,10 @@ function buildPickups() {
   const activePoints = POINTS.filter((pt) => pt.core || state.extraStops.has(pt.id));
   const warnings = [];
   const suggestions = [];
+
+  if (venue().fixedTravel) {
+    warnings.push({ kind: "info", text: `Times for ${venue().name} assume about a 45 minute drive. Nudge each stop with − and + if it's nearer or further.` });
+  }
 
   // Nearest active point per passenger
   passengers.forEach((p) => {
@@ -369,16 +376,17 @@ function renderVenues() {
     b.textContent = v.id === "other" && state.venueId === "other" && state.customVenue ? state.customVenue : v.name;
     b.setAttribute("aria-pressed", String(state.venueId === v.id));
     b.addEventListener("click", () => {
-      if (v.id === "other") {
-        const name = prompt("Venue name?", state.customVenue || "");
-        if (name === null) return;
-        state.customVenue = name.trim();
-      }
       state.venueId = v.id;
       persist(); renderVenues(); rebuildIfBuilt();
+      if (v.id === "other") $("#ov-name")?.focus();
     });
     wrap.appendChild(b);
   });
+  const ovField = $("#ov-field");
+  if (ovField) {
+    ovField.hidden = state.venueId !== "other";
+    $("#ov-name").value = state.customVenue || "";
+  }
 }
 
 function renderCrew() {
@@ -391,11 +399,12 @@ function renderCrew() {
     const row = document.createElement("button");
     row.type = "button"; row.className = "crew-row";
     row.setAttribute("aria-pressed", String(on));
+    const custom = String(p.id).startsWith("c_");
     row.innerHTML = `
       <span class="avatar" aria-hidden="true">${initials(p.name)}</span>
       <span class="who">
         <span class="nm">${esc(p.name)} ${p.car ? '<span class="badge-car">DRIVER 🚗</span>' : ""}</span>
-        <span class="ar">${esc(p.area)}</span>
+        <span class="ar">${esc(p.area)}${custom ? " · added by you" : ""}</span>
       </span>
       <span class="tick" aria-hidden="true">✓</span>`;
     row.addEventListener("click", () => {
@@ -403,6 +412,28 @@ function renderCrew() {
       else { state.sel.add(p.id); if (p.car) state.drv.add(p.id); }
       persist(); renderCrew(); renderDrivers(); renderMath(); rebuildIfBuilt();
     });
+    if (custom) {
+      const del = document.createElement("span");
+      del.className = "row-del";
+      del.setAttribute("role", "button");
+      del.setAttribute("tabindex", "0");
+      del.setAttribute("aria-label", `Remove ${p.name} from the crew list`);
+      del.textContent = "✕";
+      const removeIt = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        const i = customStaff.findIndex((c) => c.id === p.id);
+        if (i >= 0) customStaff.splice(i, 1);
+        store.set("mj_custom_staff", customStaff);
+        state.sel.delete(p.id);
+        state.drv.delete(p.id);
+        persist(); renderCrew(); renderDrivers(); renderMath(); rebuildIfBuilt();
+        toast(`${p.name} removed`);
+      };
+      del.addEventListener("click", removeIt);
+      del.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") removeIt(e); });
+      row.appendChild(del);
+    }
     list.appendChild(row);
   });
   $("#crew-count").textContent = `${state.sel.size} ticked · ${STAFF().length} on the books`;
@@ -567,19 +598,49 @@ function setBubble(text) {
 /* ---------------- Actions ---------------- */
 
 function build() {
-  state.built = buildPickups();
+  const b = buildPickups();
+  if (!b.cars.length) {
+    state.built = null;
+    renderResults();
+    $("#build-btn").textContent = "Build run sheet";
+    toast("Nobody to pick up yet. Tick some crew");
+    return;
+  }
+  state.built = b;
   renderResults();
   $("#results").scrollIntoView({ behavior: "smooth", block: "start" });
   $("#build-btn").textContent = "Rebuild run sheet";
 }
-function rebuildIfBuilt() { if (state.built) { state.built = buildPickups(); renderResults(); } }
+// Keep the results truthful: if the crew or drivers vanish, the sheet vanishes too
+function rebuildIfBuilt() {
+  if (!state.built) return;
+  const m = seatsMath();
+  if (!m.crew || !m.drivers) {
+    state.built = null;
+    $("#build-btn").textContent = "Build run sheet";
+    renderResults();
+    return;
+  }
+  const b = buildPickups();
+  state.built = b.cars.length ? b : null;
+  if (!state.built) $("#build-btn").textContent = "Build run sheet";
+  renderResults();
+}
 
-function toast(msg) {
+function toast(msg, action) {
   const t = $("#toast");
   t.textContent = msg;
+  if (action) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "toast-act";
+    b.textContent = action.label;
+    b.addEventListener("click", () => { t.classList.remove("show"); action.fn(); });
+    t.appendChild(b);
+  }
   t.classList.add("show");
   clearTimeout(t._h);
-  t._h = setTimeout(() => t.classList.remove("show"), 2200);
+  t._h = setTimeout(() => t.classList.remove("show"), action ? 6000 : 2200);
 }
 
 /* ---------------- Wire up ---------------- */
@@ -603,17 +664,34 @@ function renderDates() {
 $("#ev-start").value = state.time;
 $("#ev-date").addEventListener("change", (e) => {
   const v = e.target.value;
-  if (v && !state.dates.includes(v)) {
+  if (!v) return;
+  if (v < localIso(new Date())) {
+    toast("That date has already gone");
+    e.target.value = "";
+    return;
+  }
+  if (!state.dates.includes(v)) {
     state.dates.push(v);
     persist(); renderDates(); rebuildIfBuilt();
   }
+});
+$("#ov-name")?.addEventListener("input", (e) => {
+  state.customVenue = e.target.value.trim();
+  persist(); rebuildIfBuilt();
 });
 $("#ev-start").addEventListener("change", (e) => { state.time = e.target.value || "08:00"; persist(); rebuildIfBuilt(); });
 
 $("#crew-search").addEventListener("input", renderCrew);
 $("#crew-none").addEventListener("click", () => {
+  if (!state.sel.size) return;
+  const prevSel = [...state.sel], prevDrv = [...state.drv];
   state.sel.clear(); state.drv.clear();
   persist(); renderCrew(); renderDrivers(); renderMath(); rebuildIfBuilt();
+  toast("Crew cleared", { label: "Undo", fn: () => {
+    state.sel = new Set(prevSel);
+    state.drv = new Set(prevDrv);
+    persist(); renderCrew(); renderDrivers(); renderMath(); rebuildIfBuilt();
+  }});
 });
 
 $("#build-btn").addEventListener("click", () => {

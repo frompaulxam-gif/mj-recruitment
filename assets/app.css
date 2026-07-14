@@ -214,12 +214,12 @@ body { background: var(--surface); }
 .car .stop-line .t {
   font-family: var(--font-display); font-weight: 700; font-size: 1.35rem;
   color: var(--brand-deep);
-  min-width: 74px;
+  min-width: 64px;
 }
 .car .stop-line .then { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
 .car .stop-line .tweak { margin-left: auto; display: flex; gap: 6px; }
 .car .stop-line .tweak button {
-  width: 34px; height: 34px;
+  width: 44px; height: 44px;
   font: inherit; font-weight: 700;
   border: 1.5px solid var(--line); border-radius: 8px;
   background: var(--bg); cursor: pointer;
@@ -306,6 +306,39 @@ dialog.sheet {
 dialog.sheet::backdrop { background: oklch(0.16 0.012 262 / 0.55); }
 dialog.sheet h3 { font-size: 1.5rem; margin-bottom: 14px; }
 dialog.sheet .chips { margin-bottom: 4px; }
+
+/* Remove control on crew added by Dee */
+.crew-row .row-del {
+  flex: none;
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  color: var(--muted);
+  font-size: 1rem;
+  margin-left: 2px;
+}
+.crew-row .row-del:hover, .crew-row .row-del:focus-visible { color: var(--warn); background: var(--surface); }
+
+/* Undo button inside a toast */
+.toast .toast-act {
+  font: inherit; font-weight: 600;
+  margin-left: 14px;
+  padding: 6px 16px;
+  border: none; border-radius: 999px;
+  background: var(--brand); color: #fff;
+  cursor: pointer;
+}
+.toast.show { pointer-events: auto; }
+
+/* Add-crew dialog becomes a bottom sheet on phones */
+@media (max-width: 560px) {
+  dialog.sheet {
+    margin: auto 0 0;
+    width: 100vw;
+    max-width: none;
+    border-radius: 18px 18px 0 0;
+  }
+}
 
 #date-chips:empty { display: none; }
 #date-chips .chip { background: var(--brand); border-color: var(--brand); color: #fff; font-weight: 600; }
