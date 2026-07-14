@@ -93,6 +93,18 @@
     </div>
   </section>
 
+  <!-- Data safety: everything lives in this phone's browser -->
+  <section class="panel" aria-labelledby="h-data">
+    <h2 id="h-data">Your data</h2>
+    <p class="hint" style="color: var(--muted); font-size: 0.9rem;">Crew list, shifts and settings live on this phone.
+      Back them up now and again; restore on a new phone in one tap.</p>
+    <div style="display: flex; gap: 10px; margin-top: 12px;">
+      <button class="btn btn-outline" id="backup-btn" type="button" style="flex: 1;">Back up</button>
+      <button class="btn btn-outline" id="restore-btn" type="button" style="flex: 1;">Restore</button>
+      <input type="file" id="restore-file" accept="application/json,.json" hidden>
+    </div>
+  </section>
+
   <p class="footnote">Demo data. Crew addresses are approximate and times assume average driving speeds, so always sanity-check.</p>
 </main>
 

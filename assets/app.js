@@ -787,6 +787,44 @@ $("#add-form").addEventListener("submit", (e) => {
   persist(); renderCrew(); renderDrivers(); renderMath(); rebuildIfBuilt();
 });
 
+// Backup / restore — the whole operation should never live on one phone
+$("#backup-btn").addEventListener("click", () => {
+  const data = {
+    kind: "mj-runsheet-backup",
+    version: 1,
+    saved: new Date().toISOString(),
+    state: store.get("mj_state", null),
+    customStaff,
+    shiftLog,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `mj-runsheet-backup-${localIso(new Date())}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(a.href);
+  toast("Backup saved to your downloads ✓");
+});
+$("#restore-btn").addEventListener("click", () => $("#restore-file").click());
+$("#restore-file").addEventListener("change", (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  f.text().then((txt) => {
+    const d = JSON.parse(txt);
+    if (d.kind !== "mj-runsheet-backup") throw new Error("wrong file");
+    if (d.state) store.set("mj_state", d.state);
+    store.set("mj_custom_staff", d.customStaff || []);
+    store.set("mj_shiftlog", d.shiftLog || {});
+    toast("Restored ✓ Reloading");
+    setTimeout(() => location.reload(), 900);
+  }).catch(() => {
+    toast("That doesn't look like an MJ backup file");
+    e.target.value = "";
+  });
+});
+
 renderVenues();
 renderDates();
 renderCrew();
