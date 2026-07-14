@@ -88,7 +88,7 @@ const state = {
   venueId: saved?.venueId ?? "donington",
   customVenue: saved?.customVenue ?? "",
   time: saved?.time ?? "08:00",
-  date: saved?.date ?? nextSaturday(),
+  dates: saved?.dates ?? (saved?.date ? [saved.date] : [nextSaturday()]),
   extraStops: new Set(saved?.extraStops ?? []),
   mode: "pickup",
   regroup: true,
@@ -99,7 +99,7 @@ function persist() {
   store.set("mj_state", {
     sel: [...state.sel], drv: [...state.drv],
     venueId: state.venueId, customVenue: state.customVenue,
-    time: state.time, date: state.date,
+    time: state.time, dates: state.dates,
     extraStops: [...state.extraStops],
   });
 }
@@ -130,13 +130,25 @@ function fmtTime(mins) {
   return m === 0 ? `${h}${ap}` : `${h}.${String(m).padStart(2, "0")}${ap}`;
 }
 
-function fmtDate(iso) {
+function fmtDateParts(iso) {
   const d = new Date(iso + "T12:00");
   const days = ["sun","mon","tue","wed","thu","fri","sat"];
   const months = ["january","february","march","april","may","june","july","august","september","october","november","december"];
   const n = d.getDate();
   const suffix = (n % 10 === 1 && n !== 11) ? "st" : (n % 10 === 2 && n !== 12) ? "nd" : (n % 10 === 3 && n !== 13) ? "rd" : "th";
-  return `${days[d.getDay()]} ${n}${suffix} ${months[d.getMonth()]}`;
+  return { day: days[d.getDay()], nth: `${n}${suffix}`, month: months[d.getMonth()] };
+}
+function fmtDate(iso) {
+  const p = fmtDateParts(iso);
+  return `${p.day} ${p.nth} ${p.month}`;
+}
+function fmtDates() {
+  const parts = [...state.dates].sort().map(fmtDateParts);
+  if (!parts.length) return "";
+  if (parts.length > 1 && parts.every((p) => p.month === parts[0].month)) {
+    return parts.map((p) => `${p.day} ${p.nth}`).join(" and ") + " " + parts[0].month;
+  }
+  return parts.map((p) => `${p.day} ${p.nth} ${p.month}`).join(" and ");
 }
 
 function venue() {
@@ -320,7 +332,7 @@ const fmt1 = (n) => (Math.round(n * 10) / 10).toFixed(1);
 /* ---------------- Messages ---------------- */
 
 function pickupMessage(built) {
-  const lines = [`Hi all please find below pick up and times for ${venue().name} ${fmtDate(state.date)}`, ""];
+  const lines = [`Hi all please find below pick up and times for ${venue().name} ${fmtDates()}`, ""];
   built.cars.forEach((car) => {
     const bits = car.stops.map((s, i) =>
       `${i > 0 ? "then onto " : ""}${s.point.msg} ${fmtTime(s.time)} ${s.pax.map((p) => "@" + p.tag).join(" ")}`);
@@ -331,7 +343,7 @@ function pickupMessage(built) {
 }
 
 function dropoffMessage(drop) {
-  const lines = [`Hi all drop offs after ${venue().name} ${fmtDate(state.date)}`, ""];
+  const lines = [`Hi all drop offs after ${venue().name} ${fmtDates()}`, ""];
   drop.cars.forEach((car) => {
     lines.push(`@${car.driver.tag} driver ${car.route.map((p) => `@${p.tag} (${p.area})`).join(" then ")}`, "");
   });
@@ -572,9 +584,30 @@ function toast(msg) {
 
 /* ---------------- Wire up ---------------- */
 
-$("#ev-date").value = state.date;
+function renderDates() {
+  const wrap = $("#date-chips");
+  wrap.innerHTML = "";
+  [...state.dates].sort().forEach((iso) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "chip";
+    b.setAttribute("aria-label", `Remove ${fmtDate(iso)}`);
+    b.textContent = `${fmtDate(iso)} ✕`;
+    b.addEventListener("click", () => {
+      state.dates = state.dates.filter((d) => d !== iso);
+      persist(); renderDates(); rebuildIfBuilt();
+    });
+    wrap.appendChild(b);
+  });
+}
+
 $("#ev-start").value = state.time;
-$("#ev-date").addEventListener("change", (e) => { state.date = e.target.value; persist(); rebuildIfBuilt(); });
+$("#ev-date").addEventListener("change", (e) => {
+  const v = e.target.value;
+  if (v && !state.dates.includes(v)) {
+    state.dates.push(v);
+    persist(); renderDates(); rebuildIfBuilt();
+  }
+});
 $("#ev-start").addEventListener("change", (e) => { state.time = e.target.value || "08:00"; persist(); rebuildIfBuilt(); });
 
 $("#crew-search").addEventListener("input", renderCrew);
@@ -585,6 +618,7 @@ $("#crew-none").addEventListener("click", () => {
 
 $("#build-btn").addEventListener("click", () => {
   const m = seatsMath();
+  if (!state.dates.length) { toast("Add a date first"); return; }
   if (!m.crew) { toast("Tick who's working first"); return; }
   if (!m.drivers) { toast("Switch on at least one driver"); return; }
   build();
@@ -650,6 +684,7 @@ $("#add-form").addEventListener("submit", (e) => {
 });
 
 renderVenues();
+renderDates();
 renderCrew();
 renderDrivers();
 renderMath();
