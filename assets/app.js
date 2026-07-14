@@ -204,34 +204,41 @@ function buildPickups() {
   const pool = drivers.map((d) => ({ ...d }));
   const cars = [];
   const unseated = [];
+  const carLoad = (c) => c.stops.reduce((n, s) => n + s.pax.length, 0);
 
-  groups.forEach((g) => {
-    const queue = [...g.pax];
-    while (queue.length) {
-      // nearest free driver to this point
-      let di = -1, dBest = Infinity;
-      pool.forEach((d, i) => {
-        const dd = miles(d, g.point);
-        if (dd < dBest) { dBest = dd; di = i; }
-      });
-      if (di >= 0) {
-        const driver = pool.splice(di, 1)[0];
-        cars.push({ driver, stops: [{ point: g.point, pax: queue.splice(0, CAP) }] });
-      } else {
-        // chain onto a car with spare seats, close enough for a second stop
-        let host = null, hBest = Infinity;
-        cars.forEach((c) => {
-          const load = c.stops.reduce((n, s) => n + s.pax.length, 0);
-          if (load >= CAP || c.stops.length >= 2) return;
-          const d = miles(c.stops[0].point, g.point);
-          if (d <= 4.5 && d < hBest) { hBest = d; host = c; }
-        });
-        if (host) {
-          const load = host.stops.reduce((n, s) => n + s.pax.length, 0);
-          host.stops.push({ point: g.point, pax: queue.splice(0, CAP - load) });
-        } else {
-          unseated.push(...queue.splice(0));
-        }
+  // Phase 1: hand cars to the biggest remaining group, nearest free driver first
+  const groupsLeft = groups.map((g) => ({ point: g.point, queue: [...g.pax] }));
+  while (pool.length) {
+    groupsLeft.sort((a, b) => b.queue.length - a.queue.length);
+    const g = groupsLeft[0];
+    if (!g || !g.queue.length) break;
+    let di = -1, dBest = Infinity;
+    pool.forEach((d, i) => {
+      const dd = miles(d, g.point);
+      if (dd < dBest) { dBest = dd; di = i; }
+    });
+    const driver = pool.splice(di, 1)[0];
+    cars.push({ driver, stops: [{ point: g.point, pax: g.queue.splice(0, CAP) }] });
+  }
+
+  // Phase 2: every leftover gets ANY spare seat — a filled seat beats a tidy route.
+  // Prefer a car already calling at their point, then the car with the smallest detour.
+  const leftovers = groupsLeft.flatMap((g) => g.queue.splice(0).map((p) => ({ p, point: g.point })));
+  leftovers.forEach(({ p, point }) => {
+    let best = null, bestScore = Infinity, bestStop = null;
+    cars.forEach((c) => {
+      if (carLoad(c) >= CAP) return;
+      const sameStop = c.stops.find((s) => s.point.id === point.id) || null;
+      const score = sameStop ? -1 : Math.min(...c.stops.map((s) => miles(s.point, point)));
+      if (score < bestScore) { bestScore = score; best = c; bestStop = sameStop; }
+    });
+    if (!best) { unseated.push(p); return; }
+    if (bestStop) {
+      bestStop.pax.push(p);
+    } else {
+      best.stops.push({ point, pax: [p] });
+      if (bestScore > 4.5) {
+        warnings.push({ kind: "info", text: `${best.driver.name} detours to ${point.name} to pick up ${p.name} (~${fmt1(bestScore)} mi extra) — shuffle crew or add a driver if that's too far.` });
       }
     }
   });
@@ -240,15 +247,14 @@ function buildPickups() {
   const [sh, sm] = state.time.split(":").map(Number);
   const shiftMin = sh * 60 + sm;
   cars.forEach((car) => {
-    if (car.stops.length === 2) {
-      // farther-from-venue stop goes first
+    if (car.stops.length > 1) {
+      // farther-from-venue stops go first
       car.stops.sort((a, b) => travelToVenue(b.point) - travelToVenue(a.point));
     }
     const last = car.stops[car.stops.length - 1];
     last.time = floor5(shiftMin - travelToVenue(last.point) - ARRIVE_EARLY);
-    if (car.stops.length === 2) {
-      const first = car.stops[0];
-      first.time = floor5(last.time - travelMin(first.point, last.point) - STOP_GAP);
+    for (let i = car.stops.length - 2; i >= 0; i--) {
+      car.stops[i].time = floor5(car.stops[i + 1].time - travelMin(car.stops[i].point, car.stops[i + 1].point) - STOP_GAP);
     }
   });
 
