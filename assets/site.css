@@ -165,6 +165,7 @@
 
 .form-card {
   background: var(--bg);
+  color: var(--ink); /* the card is white even inside dark/green bands */
   border: 1.5px solid var(--line);
   border-radius: var(--radius-card);
   padding: clamp(22px, 4vw, 36px);
