@@ -17,14 +17,27 @@ function formToMessage(form) {
     const label = (field.querySelector("label")?.textContent || "").replace(/\(.*?\)/g, "").replace(/\?$/, "").trim();
     const chips = field.querySelectorAll('.chip[aria-pressed="true"]');
     const seg = field.querySelector('.seg [aria-pressed="true"]');
-    const input = field.querySelector("input, textarea");
+    const input = field.querySelector("input:not([type='file']), textarea");
     let value = "";
     if (chips.length) value = [...chips].map((c) => c.textContent.trim()).join(", ");
     else if (seg) value = seg.textContent.trim();
     else if (input) value = input.value.trim();
     if (label && value) parts.push(`${label}: ${value}`);
   });
+  const cv = form.querySelector('input[type="file"]');
+  if (cv?.files?.[0]) parts.push(`CV: ${cv.files[0].name} (attaching it in this chat)`);
   return parts.join("\n");
+}
+
+// CV picker: pretty button + filename, real upload comes with the email backend
+const cvInput = document.querySelector("#wf-cv");
+if (cvInput) {
+  document.querySelector("#wf-cv-btn").addEventListener("click", () => cvInput.click());
+  cvInput.addEventListener("change", () => {
+    const f = cvInput.files[0];
+    document.querySelector("#wf-cv-name").textContent = f ? f.name : "No file chosen";
+    document.querySelector("#wf-cv-btn").textContent = f ? "Change file" : "Choose file";
+  });
 }
 
 // Chip toggles. data-single groups behave like radios.
@@ -85,6 +98,12 @@ document.querySelectorAll("form").forEach((form) => {
       const echo = success.querySelector(".echo");
       const phone = form.querySelector('input[type="tel"]')?.value.trim();
       if (echo && phone) echo.textContent = `Your number: ${phone}. Give it a quick check before sending.`;
+      const cvNote = success.querySelector(".cv-note");
+      const cvFile = form.querySelector('input[type="file"]')?.files?.[0];
+      if (cvNote && cvFile) {
+        cvNote.hidden = false;
+        cvNote.textContent = `One more thing: after you tap send, attach ${cvFile.name} in the chat (paperclip, then Document).`;
+      }
       success.scrollIntoView({ block: "center", behavior: "smooth" });
     }
   });

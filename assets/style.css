@@ -176,6 +176,19 @@ a:hover { text-decoration-thickness: 2px; }
   box-shadow: 0 0 0 3px oklch(0.55 0.12 165 / 0.25);
 }
 .field input.error { border-color: var(--warn); }
+
+/* File picker (CV upload) */
+.file-pick { display: flex; align-items: center; gap: 12px; }
+.file-btn {
+  font: inherit; font-weight: 500;
+  padding: 11px 18px; min-height: 46px;
+  border: 1.5px solid var(--line); border-radius: var(--radius-ctl);
+  background: var(--bg); color: var(--ink);
+  cursor: pointer;
+  flex: none;
+}
+.file-btn:hover { border-color: var(--brand-deep); color: var(--brand-deep); }
+.file-name { font-size: 0.92rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .field .err-msg { font-size: 0.9rem; font-weight: 500; color: var(--warn); display: none; }
 .field.has-error .err-msg { display: block; }
 

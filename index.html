@@ -299,12 +299,21 @@
               <span class="hint">Drivers get their crew to site. Ask about driver rates.</span>
             </div>
           </div>
+          <div class="field">
+            <label for="wf-cv">CV <span class="hint">(optional)</span></label>
+            <div class="file-pick">
+              <button type="button" class="file-btn" id="wf-cv-btn">Choose file</button>
+              <span class="file-name" id="wf-cv-name">No file chosen</span>
+              <input type="file" id="wf-cv" accept=".pdf,.doc,.docx,.txt,.rtf,.pages" hidden>
+            </div>
+          </div>
           <button class="btn btn-brand" type="submit" style="width:100%">Apply now</button>
         </form>
         <div class="form-success" role="status">
           <h3>Ready to send ✓</h3>
           <p>Tap below and your application lands straight in MJ's WhatsApp. Dee will text you back within 48 hours about your first dates.</p>
           <p class="echo" style="font-size: 0.9rem; color: var(--muted); margin-top: 8px;"></p>
+          <p class="cv-note" hidden style="font-size: 0.9rem; color: var(--muted); margin-top: 8px;"></p>
           <a class="btn btn-brand wa-send" href="https://wa.me/447703459547" style="margin-top: 16px; width: 100%;">Send application on WhatsApp</a>
           <p style="font-size: 0.88rem; margin-top: 12px;">No WhatsApp? <a class="mail-send" href="mailto:staff@mjevents.co.uk">Email it instead</a></p>
         </div>
