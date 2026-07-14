@@ -359,8 +359,10 @@ function buildHomePickups(drivers, passengers) {
     let t = shiftMin - ARRIVE_EARLY - travelToVenue(route[route.length - 1]);
     const times = new Array(route.length);
     for (let i = route.length - 1; i >= 0; i--) {
-      times[i] = floor5(t);
-      if (i > 0) t -= travelMin(route[i - 1], route[i]) + 3;
+      // Keep each earlier home at least 5 min before the next, so neighbours
+      // don't both get stamped the same time.
+      times[i] = i === route.length - 1 ? floor5(t) : Math.min(floor5(t), times[i + 1] - 5);
+      if (i > 0) t = times[i] - (travelMin(route[i - 1], route[i]) + 3);
     }
     return { driver: d, pax: route, stops: route.map((pp, i) => ({ home: pp, time: times[i] })) };
   });
