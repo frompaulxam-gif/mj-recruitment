@@ -50,8 +50,11 @@
     </div>
     <div class="row2">
       <div class="field" style="margin-bottom: 0;">
-        <label for="ev-date">Dates <span class="hint">(pick to add)</span></label>
-        <input type="date" id="ev-date">
+        <label for="ev-date">Dates</label>
+        <div style="display: flex; gap: 8px;">
+          <input type="date" id="ev-date" style="flex: 1;">
+          <button class="mini" id="date-add" type="button" aria-label="Add this date">Add</button>
+        </div>
       </div>
       <div class="field" style="margin-bottom: 0;">
         <label for="ev-start">Shift starts</label>
@@ -149,6 +152,6 @@
 
 <div class="toast" id="toast" role="status"></div>
 
-<script src="assets/app.js?v=4"></script>
+<script src="assets/app.js?v=5"></script>
 </body>
 </html>

@@ -57,13 +57,13 @@ body { background: var(--surface); }
   border: 1.5px solid var(--line); border-radius: var(--radius-ctl);
 }
 .crew-tools input:focus { outline: none; border-color: var(--brand-deep); }
-.crew-tools .mini {
+.mini {
   font: inherit; font-size: 0.88rem; font-weight: 500;
   padding: 0 12px; min-height: 44px;
   background: var(--bg); border: 1.5px solid var(--line);
   border-radius: var(--radius-ctl); cursor: pointer; color: var(--muted);
 }
-.crew-tools .mini:hover { border-color: var(--brand-deep); color: var(--ink); }
+.mini:hover { border-color: var(--brand-deep); color: var(--ink); }
 
 .crew-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .crew-row {

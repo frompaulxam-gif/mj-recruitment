@@ -753,18 +753,15 @@ function renderDates() {
 }
 
 $("#ev-start").value = state.time;
-$("#ev-date").addEventListener("change", (e) => {
-  const v = e.target.value;
-  if (!v) return;
-  if (v < localIso(new Date())) {
-    toast("That date has already gone");
-    e.target.value = "";
-    return;
-  }
-  if (!state.dates.includes(v)) {
-    state.dates.push(v);
-    persist(); renderDates(); rebuildIfBuilt();
-  }
+// Dates are added deliberately: pick a date, then tap Add
+$("#date-add").addEventListener("click", () => {
+  const v = $("#ev-date").value;
+  if (!v) { toast("Pick a date first"); return; }
+  if (v < localIso(new Date())) { toast("That date has already gone"); return; }
+  if (state.dates.includes(v)) { toast("Already on the list"); return; }
+  state.dates.push(v);
+  persist(); renderDates(); rebuildIfBuilt();
+  toast(`Added ${fmtDate(v)} ✓`);
 });
 $("#ov-name")?.addEventListener("input", (e) => {
   state.customVenue = e.target.value.trim();

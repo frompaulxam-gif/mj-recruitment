@@ -202,6 +202,46 @@
 .band-brand .form-card { border-color: transparent; box-shadow: 0 10px 24px -16px oklch(0 0 0 / 0.45); }
 
 
+/* ---------- Client stats + range photos ---------- */
+.client-stats {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 18px;
+  max-width: 46ch;
+}
+.client-stats .cs { display: grid; gap: 2px; }
+.client-stats .count {
+  font-weight: 600;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--brand-deep);
+}
+.client-stats .cl { font-size: 0.88rem; color: var(--muted); }
+.range-row {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 46ch;
+}
+.range-row figure { margin: 0; }
+.range-row img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* ---------- Quote stars ---------- */
+.quotes .q .stars {
+  display: block;
+  color: var(--brand-deep);
+  letter-spacing: 3px;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
 /* ---------- Quotes ---------- */
 .quotes {
   display: grid;

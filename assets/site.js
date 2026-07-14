@@ -115,6 +115,35 @@ document.querySelectorAll("form").forEach((form) => {
   });
 });
 
+// Count-up numbers: markup already holds final values; animation is a layer.
+(() => {
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const counts = document.querySelectorAll(".count");
+  if (!counts.length || reduced || !("IntersectionObserver" in window)) return;
+  const render = (el, n) => {
+    el.textContent = (el.dataset.prefix || "") + n.toLocaleString("en-GB") + (el.dataset.suffix || "");
+  };
+  const run = (el) => {
+    if (el._ran) return;
+    el._ran = true;
+    const target = +el.dataset.target;
+    if (!target) { render(el, target); return; }
+    const t0 = performance.now(), dur = 1000;
+    const tick = (t) => {
+      const p = Math.min(1, (t - t0) / dur);
+      render(el, Math.round(target * (1 - Math.pow(1 - p, 4))));
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+  counts.forEach((c) => { c.textContent = (c.dataset.prefix || "") + "0" ; });
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) { run(e.target); io.unobserve(e.target); }
+  }), { threshold: 0.5 });
+  counts.forEach((c) => io.observe(c));
+  setTimeout(() => counts.forEach((c) => { if (!c._ran) { c._ran = true; render(c, +c.dataset.target); } }), 5000);
+})();
+
 // Scroll reveals — enhancement only; content is visible without JS.
 if (window.matchMedia("(prefers-reduced-motion: no-preference)").matches && "IntersectionObserver" in window) {
   const io = new IntersectionObserver((entries) => {
