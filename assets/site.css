@@ -220,6 +220,30 @@
   object-fit: cover;
 }
 
+/* ---------- Contact bar (pre-footer, D&J style) ---------- */
+.contact-bar {
+  background: var(--bg);
+  border-top: 1px solid var(--line);
+  padding: 20px 0;
+}
+.contact-bar .inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 clamp(18px, 4vw, 32px);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px clamp(18px, 3vw, 40px);
+}
+.contact-bar a { color: var(--ink); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 9px; }
+.contact-bar a:hover { color: var(--brand-deep); }
+.contact-bar a svg { color: var(--brand-deep); flex: none; }
+.contact-bar .icons { display: flex; gap: 16px; }
+.contact-bar .btn { margin-left: auto; padding: 11px 22px; min-height: 44px; }
+@media (max-width: 720px) {
+  .contact-bar .btn { margin-left: 0; width: 100%; }
+}
+
 /* ---------- Footer ---------- */
 .site-footer {
   background: var(--tarmac);

@@ -139,6 +139,8 @@ a:hover { text-decoration-thickness: 2px; }
 .btn-outline { background: transparent; color: inherit; border-color: currentColor; }
 .btn-outline:hover { border-color: var(--brand); color: var(--brand-deep); }
 .on-dark .btn-outline:hover { color: var(--brand-bright); }
+.btn-light { background: #fff; color: var(--ink); }
+.btn-light:hover { background: oklch(0.92 0.005 170); }
 .btn-dark { background: var(--tarmac); color: var(--on-dark); }
 .btn-dark:hover { background: var(--tarmac-2); }
 .btn[disabled] { opacity: 0.45; cursor: not-allowed; }
